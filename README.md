@@ -1,2 +1,2 @@
 # osp-integration
-Red Hat OpenStack Platform integration files.
+This respository is for Red Hat OpenStack Platform integration files.
