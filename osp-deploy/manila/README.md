@@ -28,7 +28,7 @@ Create the environment file that will orchestrate the back end settings. Use the
 
 For full detailed instruction of all options please refer to [VMAX Shared File Systems Configuration](https://docs.openstack.org/manila/rocky/configuration/shared-file-systems/drivers/dell-emc-vmax-driver.html).
 
-** Environment sample**
+**Environment sample**
 
 With a director deployment, VMAX manila backend can be deployed using the integrated heat environment file. This file is located in the following path of the Undercloud node:
 /usr/share/openstack-tripleo-heat-templates/environments/manila-vmax-config.yaml.yaml
