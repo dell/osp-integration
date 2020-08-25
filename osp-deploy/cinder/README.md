@@ -16,7 +16,7 @@ The following Dell EMC storage drivers that are fully integrated with director a
 * [SC Series iSCSI driver](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-storagecenter-driver.html) - Please refer to this [backend guide for SC Series ISCSI driver](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/16.0/html/dell_storage_center_back_end_guide/index)
 * [Unity iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-unity-driver.html) -  Please refer to this [custom deployment guide for the Unity Driver](https://github.com/emc-openstack/osp-deploy/tree/rhosp16/cinder)
 * [VNX iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-vnx-driver.html) - Please refer to this [custom deployment guide for the VNX driver](https://github.com/emc-openstack/osp-deploy/tree/rhosp16/cinder)
- 
+* [PowerFlex/VxFlex OS drivers](https://docs.openstack.org/cinder/train/configuration/block-storage/drivers/dell-emc-vxflex-driver.html) - Please refer to this [Guide for the PowerFlex/VXFlex OS driver](https://github.com/dell/osp-integration/tree/master/osp-deploy/cinder/powerflex/README.md) 
 
 ## Prerequisites
 - Dell EMC Storage Backend configured as storage repository.
