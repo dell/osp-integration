@@ -73,6 +73,11 @@ parameter_defaults:
 
 ### Prepare custom volume mappings for connector configuration 
 
+On each node where VxFlex OS SDC will be installed, create the directory where the connector file will reside
+```bash
+$ mkdir -p /opt/emc/scaleio/openstack
+```
+
 Create or edit `/home/stack/templates/custom-dellemc-volume-mappings.yaml`.
 
 ```yaml
@@ -124,14 +129,13 @@ san_thin_provision = false
 ### Configure connector
 Before using attach/detach volume operations VxFlex OS connector must be properly configured. On each node where VxFlex OS SDC is installed do the following:
 
-Create /opt/emc/powerflex/openstack/connector.conf if it does not exist.
+Create /opt/emc/scaleio/openstack/connector.conf if it does not exist.
 
 ```bash
-$ mkdir -p /opt/emc/powerflex/openstack
 $ touch /opt/emc/powerflex/openstack/connector.conf
 ```
 
-For each VxFlex OS section in the cinder.conf create the same section in the /opt/emc/powerflex/openstack/connector.conf and populate it with passwords. Example:
+For each VxFlex OS section in the cinder.conf create the same section in the /opt/emc/scaleio/openstack/connector.conf and populate it with passwords. Example:
 
 ```
 [vxflexos]
