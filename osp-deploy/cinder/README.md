@@ -17,6 +17,7 @@ The following Dell EMC storage drivers that are fully integrated with director a
 * [Unity iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-unity-driver.html) -  Please refer to this [custom deployment guide for the Unity Driver](https://github.com/emc-openstack/osp-deploy/tree/rhosp16/cinder)
 * [VNX iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-vnx-driver.html) - Please refer to this [custom deployment guide for the VNX driver](https://github.com/emc-openstack/osp-deploy/tree/rhosp16/cinder)
 * [PowerFlex/VxFlex OS drivers](https://docs.openstack.org/cinder/train/configuration/block-storage/drivers/dell-emc-vxflex-driver.html) - Please refer to this [Guide for the PowerFlex/VXFlex OS driver](https://github.com/dell/osp-integration/tree/master/osp-deploy/cinder/powerflex/README.md) 
+* [PowerStore iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powerstore-driver.html) - see below
 
 ## Prerequisites
 - Dell EMC Storage Backend configured as storage repository.
@@ -199,6 +200,50 @@ parameter_defaults:
       tripleo_dellemc_dellsc/dell_sc_volume_folder :
         value: 'cindervol'
     cinder_user_enabled_backends: ['tripleo_dellemc_dellsc']
+```    
+**4. PowerStore iSCSI and FC drivers**  
+For full detailed instruction of options please refer to [PowerStore Backend Configuration](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powerstore-driver.html#driver-configuration)
+
+**Environment sample**
+
+With a director deployment, PowerStore backend can be deployed using the integrated heat environment file. This file is located in the following path of the Undercloud node:
+/usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-powerstore-config.yaml
+
+Copy this file to a local path where you can edit and invoke it later. For example, to copy it to ~/templates/:
+
+```bash
+$ cp /usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-powerstore-config.yaml ~/templates/
+```
+Afterwards, open the copy (~/templates/cinder-dellemc-powerstore-config.yaml) and edit it as you see fit. The following shows a sample content of the file. The files will list optional params that the user can choose to override if they don't like the default value.
+
+```yaml
+# A Heat environment file which can be used to enable a
+# Cinder Dell EMC PowerMax backend, configured via puppet.
+resource_registry:
+  OS::TripleO::Services::CinderBackendDellEMCPowerStore: ../deployment/cinder/cinder-backend-dellemc-powerstore-puppet.yaml
+
+parameter_defaults:
+  CinderEnablePowerStoreBackend: true
+  CinderPowerStoreBackendName: 'tripleo_dellemc_powerstore'
+  CinderPowerStoreMultiConfig: {}
+  CinderPowerStoreAvailabilityZone: ''
+  CinderPowerStoreSanIp: '10.10.10.10'
+  CinderPowerStoreSanLogin: 'admin'
+  CinderPowerStoreSanPassword: 'password'
+  CinderPowerStoreAppliances: 'appliance-1,appliance2'
+  CinderPowerStorePorts: '10.10.10.11,10.10.10.12'
+  CinderPowerStoreStorageProtocol: 'iSCSI'
+
+# To configure multiple PowerStore backends, use CinderPowerStoreMultiConfig to
+# assign parameter values specific to that backend. For example:
+#   CinderPowerStoreBackendName:
+#     - tripleo_dellemc_powerstore_1
+#     - tripleo_dellemc_powerstore_2
+#   CinderPowerStoreMultiConfig:
+#     tripleo_dellemc_powerstore_1:
+#       CinderPowerStoreStorageProtocol: 'iSCSI' # Specific value for this backend
+#     tripleo_dellemc_powerstore_2:
+#       CinderPowerStoreStorageProtocol: 'FC' # Specific value for this backend
 ```    
 ### Deploy the configured backends
 
