@@ -214,7 +214,7 @@ Copy this file to a local path where you can edit and invoke it later. For examp
 ```bash
 $ cp /usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-powerstore-config.yaml ~/templates/
 ```
-Afterwards, open the copy (~/templates/cinder-dellemc-powerstore-config.yaml) and edit it as you see fit. The following shows a sample content of the file. The files will list optional params that the user can choose to override if they don't like the default value.
+Afterwards, open the copy (~/templates/cinder-dellemc-powerstore-config.yaml) and edit it as you see fit. The following shows a sample content of the file. The files will list optional params that the user can choose to overwrite if they don't like the default value.
 
 ```yaml
 # A Heat environment file which can be used to enable a
