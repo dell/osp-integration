@@ -218,7 +218,7 @@ Afterwards, open the copy (~/templates/cinder-dellemc-powerstore-config.yaml) an
 
 ```yaml
 # A Heat environment file which can be used to enable a
-# Cinder Dell EMC PowerMax backend, configured via puppet.
+# Cinder Dell EMC PowerStore backend, configured via puppet.
 resource_registry:
   OS::TripleO::Services::CinderBackendDellEMCPowerStore: ../deployment/cinder/cinder-backend-dellemc-powerstore-puppet.yaml
 
@@ -234,8 +234,8 @@ parameter_defaults:
   CinderPowerStorePorts: '10.10.10.11,10.10.10.12'
   CinderPowerStoreStorageProtocol: 'iSCSI'
 
-# To configure multiple PowerStore backends, use CinderPowerStoreMultiConfig to
-# assign parameter values specific to that backend. For example:
+# To configure multiple PowerStore backends differently, use CinderPowerStoreMultiConfig to
+# assign parameter values specific to each backend. For example:
 #   CinderPowerStoreBackendName:
 #     - tripleo_dellemc_powerstore_1
 #     - tripleo_dellemc_powerstore_2
