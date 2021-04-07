@@ -160,7 +160,8 @@ Finally create a volume-type and test if you can successfully create and attach 
 
 ### Upgrading PowerFlex
 
-First of all, upgrade PowerFlex system using official instructions. Upgrading SDC is not necessary as it has to be upgraded after Overcloud nodes OS upgrade.
+At the first step, upgrade PowerFlex system to the latest available version using official instructions. 
+Upgrading SDC is not necessary as it has to be upgraded after Overcloud nodes OS upgrade.
 For more information on how to upgrade PowerFlex system please contact [PowerFlex support team](https://www.dell.com/support/contents/en-us/category/contact-information).
 
 ### Upgrading RHOSP
