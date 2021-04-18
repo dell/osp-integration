@@ -92,7 +92,7 @@ parameter_defaults:
 ```
 ### Workarounds
 
-Workaround for SElinux issue, see attached [SElinux_workaround_for_SDC_RHEL8.2.pdf](https://github.com/dell/osp-integration/edit/master/osp-deploy/cinder/powerflex/SElinux_workaround_for_SDC_RHEL8.2.pdf).
+Workaround for SElinux issue, see attached [SElinux_workaround_for_SDC_RHEL8.2.pdf](https://github.com/dell/osp-integration/blob/master/osp-deploy/cinder/powerflex/SElinux_workaround_for_SDC_RHEL8.2.pdf).
 
 
 ### Deploy the configured backends
