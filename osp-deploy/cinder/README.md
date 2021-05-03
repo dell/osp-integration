@@ -6,13 +6,12 @@
 This document describes how to deploy the Dell EMC Block Storage services in a Red Hat OpenStack Platform Overcloud.
 This assumes that the RHOSP installion is through RHOSP director toolset which is based primarily on the upstream TripleO project.  
 This mainly covers the Dell EMC storage backends that are not yet fully integrated with director through Tripleo like
-* [XtremIO Fibre Channel driver](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-xtremio-driver.html)
 * [PowerMax iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powermax-driver.html)
 * [SC Series Fibre Channel driver](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-storagecenter-driver.html)
 
 
 The following Dell EMC storage drivers that are fully integrated with director and can be deployed using tripleo heat templates 
-* [XtremIO iSCSI driver](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-xtremio-driver.html) - see below
+* [XtremIO iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-xtremio-driver.html) - see below
 * [SC Series iSCSI driver](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-storagecenter-driver.html) - Please refer to this [backend guide for SC Series ISCSI driver](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/16.0/html/dell_storage_center_back_end_guide/index)
 * [Unity iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-unity-driver.html) -  Please refer to this [custom deployment guide for the Unity Driver](https://github.com/emc-openstack/osp-deploy/tree/rhosp16/cinder)
 * [VNX iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-vnx-driver.html) - Please refer to this [custom deployment guide for the VNX driver](https://github.com/emc-openstack/osp-deploy/tree/rhosp16/cinder)
@@ -40,54 +39,51 @@ parameter_defaults:
 
 For full detailed instruction of all options please refer to [XtremIO Backend Configuration](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-xtremio-driver.html#configuration-options).
 
-**iSCSI Environment sample**
+**Environment sample**
 
-With a director deployment, XtremIO iSCSI backend can be deployed using the integrated heat environment file. This file is located in the following path of the Undercloud node:
-/usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-xtremio-iscsi-config.yaml
+With a director deployment, XtremIO backend can be deployed using the integrated heat environment file. This file is located in the following path of the Undercloud node:
+/usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-xtremio-config.yaml
 
 Copy this file to a local path where you can edit and invoke it later. For example, to copy it to ~/templates/:
 
 ```bash
-$ cp /usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-xtremio-iscsi-config.yaml ~/templates/
+$ cp /usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-xtremio-config.yaml ~/templates/
 ```
-Afterwards, open the copy (~/templates/cinder-dellemc-xtremio-iscsi-config.yaml) and edit it as you see fit. The following shows a sample content of the file. The files will list optional params that the user can choose to override if they don't like the default value.
+Afterwards, open the copy (~/templates/cinder-dellemc-xtremio-config.yaml) and edit it as you see fit. The following shows a sample content of the file. The files will list optional params that the user can choose to override if they don't like the default value.
+
+```CinderXtremioStorageProtocol``` default value is iSCSI. To configure FC backend add ```CinderXtremioStorageProtocol: 'FC'```.
 
 Note that the ```resource_registry``` entry in the heat environment file must be an absolute path when you make a copy.
 
 ```yaml
 # A Heat environment file which can be used to enable a
-# Cinder Dell EMC XTREMIO iSCSI backend, configured via puppet
+# Cinder Dell EMC Xtremio backend, configured via puppet
 resource_registry:
-  OS::TripleO::Services::CinderBackendDellEMCXTREMIOIscsi: ../deployment/cinder/cinder-backend-dellemc-xtremio-iscsi-puppet.yaml
+  OS::TripleO::Services::CinderBackendDellEMCXtremio: ../deployment/cinder/cinder-backend-dellemc-xtremio-puppet.yaml
 
 parameter_defaults:
-  CinderEnableDellEMCXTREMIOIscsiBackend: true
-  CinderDellEMCXTREMIOIscsiBackendName: 'tripleo_dellemc_xtremio_iscsi'
-  CinderDellEMCXTREMIOIscsiSanIp: '10.10.10.10'
-  CinderDellEMCXTREMIOIscsiSanLogin: 'my_username'
-  CinderDellEMCXTREMIOIscsiSanPassword: 'my_password'
-  CinderDellEMCXTREMIOIscsiClusterName: 'Cluster-Name'  
-```
-
-**FC Environment sample**
-
-```yaml
-parameter_defaults:
-  ControllerExtraConfig:
-    cinder::config::cinder_config:
-      tripleo_dellemc_xtremio/volume_driver:
-        value: cinder.volume.drivers.dell_emc.xtremio.XtremIOFibreChannelDriver
-      tripleo_dellemc_xtremio/volume_backend_name:
-        value: tripleo_dellemc_xtremio
-      tripleo_dellemc_xtremio/san_ip:
-        value: '10.10.10.10'
-      tripleo_dellemc_xtremio/san_login:
-        value: 'my_username'
-      tripleo_dellemc_xtremio/san_password:
-        value: 'my_password'
-      tripleo_dellemc_xtremio/xtremio_volumes_per_glance_cache:
-        value: 100  
-    cinder_user_enabled_backends: ['tripleo_dellemc_xtremio']
+  CinderEnableXtremioBackend: true
+  CinderXtremioBackendName: 'tripleo_dellemc_xtremio'
+  CinderXtremioSanIp: '10.10.10.10'
+  CinderXtremioSanLogin: 'my_username'
+  CinderXtremioSanPassword: 'my_password'
+  CinderXtremioClusterName: 'Cluster-Name'
+  CinderXtremioArrayBusyRetryCount: 5
+  CinderXtremioArrayBusyRetryInterval: 5
+  CinderXtremioVolumesPerGlanceCache: 100
+# To configure multiple backends, use CinderXtremioMultiConfig to
+# assign parameter values specific to that backend. CinderXtremioMultiConfig
+# is a dictionary of the parameter values for each backend specified in
+# CinderXtremioBackendName.
+# For example, see below:
+#   CinderXtremioBackendName:
+#     - tripleo_dellemc_xtremio_1
+#     - tripleo_dellemc_xtremio_2
+#   CinderXtremioMultiConfig:
+#     tripleo_dellemc_xtremio_1:
+#       CinderXtremioStorageProtocol: 'iSCSI' # Specific value for this backend
+#     tripleo_dellemc_xtremio_2:
+#       CinderXtremioStorageProtocol: 'FC' # Specific value for this backend
 ```
 
 **2. PowerMax iSCSI and FC drivers**
