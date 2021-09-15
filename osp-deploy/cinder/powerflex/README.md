@@ -13,7 +13,7 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 ## Prerequisites
 
 - Red Hat OpenStack Platform 16.1 with RHEL 8.2.
-- PowerFlex 3.5
+- PowerFlex 3.5 or 3.6
 - PowerFlex Gateway has to be installed and accessible in the network.
 - PowerFlex Storage Data Client (SDC) has to be installed on all OpenStack nodes.
 - Configuration settings and credentials of Gateway.
