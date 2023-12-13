@@ -1,22 +1,21 @@
 
-# Dell EMC Cinder Backend Deployment Guide for Red Hat OpenStack Platform 16
+# Dell EMC Cinder Backend Deployment Guide for Red Hat OpenStack Platform 17
 
 ## Overview
 
 This document describes how to deploy the Dell EMC Block Storage services in a Red Hat OpenStack Platform Overcloud.
-This assumes that the RHOSP installion is through RHOSP director toolset which is based primarily on the upstream TripleO project.  
-This mainly covers the Dell EMC storage backends that are not yet fully integrated with director through Tripleo like
-* [PowerMax iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powermax-driver.html)
-* [SC Series Fibre Channel driver](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-storagecenter-driver.html)
+This assumes that the RHOSP installion is deon through RHOSP director toolset which is based primarily on the upstream TripleO project.  
 
 
-The following Dell EMC storage drivers that are fully integrated with director and can be deployed using tripleo heat templates 
+
+The following Dell EMC storage drivers are fully integrated with director and can be deployed using tripleo heat templates 
 * [XtremIO iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-xtremio-driver.html) - see below
-* [SC Series iSCSI driver](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-storagecenter-driver.html) - Please refer to this [backend guide for SC Series ISCSI driver](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/16.0/html/dell_storage_center_back_end_guide/index)
-* [Unity iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-unity-driver.html) -  Please refer to this [custom deployment guide for the Unity Driver](https://github.com/emc-openstack/osp-deploy/tree/rhosp16/cinder)
+* [SC Series FC and iSCSI driver](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-storagecenter-driver.html) - see below
+* [Unity iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-unity-driver.html) -  Please refer to this [custom deployment guide for the Unity Driver](https://github.com/emc-openstack/osp-deploy/tree/rhosp17.1/cinder)
 * [VNX iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-vnx-driver.html) - Please refer to this [custom deployment guide for the VNX driver](https://github.com/emc-openstack/osp-deploy/tree/rhosp16/cinder)
 * [PowerFlex/VxFlex OS drivers](https://docs.openstack.org/cinder/train/configuration/block-storage/drivers/dell-emc-vxflex-driver.html) - Please refer to this [Guide for the PowerFlex/VXFlex OS driver](https://github.com/dell/osp-integration/tree/master/osp-deploy/cinder/powerflex/README.md) 
 * [PowerStore iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powerstore-driver.html) - see below
+* [PowerMax iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powermax-driver.html) - see below
 
 ## Prerequisites
 - Dell EMC Storage Backend configured as storage repository.
@@ -25,7 +24,7 @@ The following Dell EMC storage drivers that are fully integrated with director a
 ## Deployment Steps
 
 ### Prepare the Environment File
-The environment file is a OSP director environment file. The environment file contains the settings for each back end you want to define. Using the environment file will ensure that the back end settings persist through future Overcloud updates and upgrades.  
+The environment file is an OSP director environment file. The environment file contains the settings for each back end you want to define. Using the environment file will ensure that the back end settings persist through future Overcloud updates and upgrades.  
 
 Create the environment file that will orchestrate the back end settings. Use the sample file provided below for your specific backend.  
 
@@ -97,7 +96,7 @@ parameter_defaults:
   ControllerExtraConfig:
     cinder::config::cinder_config:
       tripleo_dellemc_powermax/volume_driver:
-        value: cinder.volume.drivers.dell_emc.vmax.iscsi.VMAXISCSIDriver
+        value: cinder.volume.drivers.dell_emc.powermax.iscsi.PowerMaxISCSIDriver
       tripleo_dellemc_powermax/volume_backend_name:
         value: tripleo_dellemc_powermax
       tripleo_dellemc_powermax/san_ip:
@@ -106,11 +105,11 @@ parameter_defaults:
         value: 'my_username'
       tripleo_dellemc_powermax/san_password:
         value: 'my_password'
-      tripleo_dellemc_powermax/vmax_port_groups:
+      tripleo_dellemc_powermax/powermax_port_groups:
         value: '[OS-ISCSI-PG]'
-      tripleo_dellemc_powermax/vmax_array:
+      tripleo_dellemc_powermax/powermax_array:
         value: '000123456789'
-      tripleo_dellemc_powermax/vmax_srp:
+      tripleo_dellemc_powermax/powermax_srp:
         value: 'SRP_1'
     cinder_user_enabled_backends: ['tripleo_dellemc_powermax']
 ```
@@ -122,7 +121,7 @@ parameter_defaults:
   ControllerExtraConfig:
     cinder::config::cinder_config:
       tripleo_dellemc_powermax/volume_driver:
-        value: cinder.volume.drivers.dell_emc.vmax.fc.VMAXFCIDriver
+        value: cinder.volume.drivers.dell_emc.powermax.fc.PowerMaxFCDriver
       tripleo_dellemc_powermax/volume_backend_name:
         value: tripleo_dellemc_powermax
       tripleo_dellemc_powermax/san_ip:
@@ -131,11 +130,11 @@ parameter_defaults:
         value: 'my_username'
       tripleo_dellemc_powermax/san_password:
         value: 'my_password'
-      tripleo_dellemc_powermax/vmax_port_groups:
+      tripleo_dellemc_powermax/powermax_port_groups:
         value: '[OS-FC-PG]'
-      tripleo_dellemc_powermax/vmax_array:
+      tripleo_dellemc_powermax/powermax_array:
         value: '000123456789'
-      tripleo_dellemc_powermax/vmax_srp:
+      tripleo_dellemc_powermax/powermax_srp:
         value: 'SRP_1'
     cinder_user_enabled_backends: ['tripleo_dellemc_powermax']
 ```
@@ -150,15 +149,15 @@ With a director deployment, Dell SC Series backend can be deployed using the int
 Copy this file to a local path where you can edit and invoke it later. For example, to copy it to ~/templates/:
 
 ```bash
-$ cp /usr/share/openstack-tripleo-heat-templates/environments/cinder-dellsc-config.yaml ~/templates/
+$ cp /usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-sc-config.yaml ~/templates/
 ```
-Afterwards, open the copy (~/templates/cinder-dellsc-config.yaml) and edit it as you see fit. The following shows a sample content of the file. The files will list optional params that the user can choose to override if they don't like the default value.
+Afterwards, open the copy (~/templates/cinder-dellemc-sc-config.yaml) and edit it as you see fit. The following shows a sample content of the file. The files will list optional params that the user can choose to override if they don't like the default value.
 
 ```yaml
 # A Heat environment file which can be used to enable a
 # Cinder Dell EMC Storage Center ISCSI backend, configured via puppet
 resource_registry:
-  OS::TripleO::Services::CinderBackendDellSc: ../deployment/cinder/cinder-backend-dellsc-puppet.yaml
+  OS::TripleO::Services::CinderBackendDellSc: ../deployment/cinder/cinder-backend-dellemc-sc-puppet.yaml
 
 parameter_defaults:
   CinderEnableDellScBackend: true
@@ -261,7 +260,7 @@ parameter_defaults:
   ControllerExtraConfig:
     cinder::config::cinder_config:
       tripleo_dellemc_powermax1/volume_driver:
-        value: cinder.volume.drivers.dell_emc.vmax.iscsi.VMAXISCSIDriver
+        value: cinder.volume.drivers.dell_emc.powermax.iscsi.PowerMaxISCSIDriver
       tripleo_dellemc_powermax1/volume_backend_name:
         value: tripleo_dellemc_powermax1
       tripleo_dellemc_powermax1/san_ip:
@@ -277,7 +276,7 @@ parameter_defaults:
       tripleo_dellemc_powermax1/vmax_srp:
         value: 'SRP_1'
       tripleo_dellemc_powermax2/volume_driver:
-        value: cinder.volume.drivers.dell_emc.vmax.fc.VMAXFCIDriver
+        value: cinder.volume.drivers.dell_emc.powermax.fc.PowerMaxFCDriver
       tripleo_dellemc_powermax2/volume_backend_name:
         value: tripleo_dellemc_powermax2
       tripleo_dellemc_powermax2/san_ip:
