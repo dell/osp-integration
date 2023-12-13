@@ -17,6 +17,11 @@ The following Dell EMC storage drivers are fully integrated with director and ca
 * [PowerStore iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powerstore-driver.html) - see below
 * [PowerMax iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powermax-driver.html) - see below
 
+**Note:** The following drivers will be deprecated starting from the 2023.1 Antelope OpenStack upstream
+* XtremIO iSCSI and FC drivers
+* SC Series FC and iSCSI drivers
+* VNX iSCSI and FC drivers
+
 ## Prerequisites
 - Dell EMC Storage Backend configured as storage repository.
 - Configuration settings and credentials.
@@ -28,7 +33,8 @@ The environment file is an OSP director environment file. The environment file c
 
 Create the environment file that will orchestrate the back end settings. Use the sample file provided below for your specific backend.  
 
-Note: **LVM driver** is enabled by default in TripleO, you want to set the ```CinderEnableIscsiBackend``` to false in one of your environment file to turn it off.
+**Note:** **LVM driver** is enabled by default in TripleO, you want to set the ```CinderEnableIscsiBackend``` to false in one of your environment file to turn it off.
+
 ```yaml
 parameter_defaults:
   CinderEnableIscsiBackend: false
@@ -139,6 +145,7 @@ parameter_defaults:
     cinder_user_enabled_backends: ['tripleo_dellemc_powermax']
 ```
 **3. SC Series iSCSI and FC drivers**  
+
 For full detailed instruction of options please refer to [SC Series Backend Configuration](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-storagecenter-driver.html#configuration-options)
 
 **iSCSI Environment sample**
