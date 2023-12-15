@@ -307,13 +307,13 @@ For more information see the Red Hat [Custom Block Storage Back End Deployment G
 
 When the director completes the overcloud deployment, check that the volume services are up using the openstack cli command. You can also verify that the cinder.conf in the cinder container and it should reflect changes made above.
 ``` bash
-$openstack volume service list
+$ openstack volume service list
 ```
 ### Testing the configured Backend
 After you deploy the back ends to the overcloud, create a volume-type per backend and test if you can successfully create and attach volumes of that type.
 
 ## References
-* [Red Hat OpenStack Platform Overcloud Custom Block Storage Backend Guide](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/16.0/html/custom_block_storage_back_end_deployment_guide/index)
+* [Red Hat OpenStack Platform Overcloud Custom Block Storage Backend Guide](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/17.0/html/custom_block_storage_back_end_deployment_guide/index)
 
   
 
