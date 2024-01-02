@@ -4,7 +4,7 @@
 ## Overview
 
 This document describes how to deploy the Dell EMC Block Storage services in a Red Hat OpenStack Platform Overcloud.
-This assumes that the RHOSP installion is deon through RHOSP director toolset which is based primarily on the upstream TripleO project.  
+This assumes that the RHOSP installation is done through RHOSP director toolset which is based primarily on the upstream TripleO project.  
 
 
 
