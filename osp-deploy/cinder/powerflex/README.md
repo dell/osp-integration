@@ -87,6 +87,8 @@ parameter_defaults:
     - /opt/emc/scaleio/openstack:/opt/emc/scaleio/openstack
   CinderVolumeOptVolumes:
     - /opt/emc/scaleio/openstack:/opt/emc/scaleio/openstack
+  CinderBackupOptVolumes:
+    - /opt/emc/scaleio/openstack:/opt/emc/scaleio/openstack
   GlanceApiOptVolumes:
     - /opt/emc/scaleio/openstack:/opt/emc/scaleio/openstack
 ```
