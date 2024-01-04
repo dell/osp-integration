@@ -158,7 +158,7 @@ san_password = powerflex_password
 Install the PowerFlex Storage Data Client (SDC) on all nodes after deploying the overcloud.
 
 ### Test the configured Backend
-Finally, create a Powerflex volume type and test if you can successfully create and attach volumes of that type.
+Finally, create a PowerFlex volume type and test if you can successfully create and attach volumes of that type.
 
 Run the following command to check whether the Cinder service is started. 
 ```
