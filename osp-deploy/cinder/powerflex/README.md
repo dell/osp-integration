@@ -14,9 +14,7 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 
 - Red Hat OpenStack Platform 17.1 with RHEL 9.2.
 - PowerFlex 3.5 or 3.6
-- PowerFlex Gateway has to be installed and accessible in the network.
 - PowerFlex Storage Data Client (SDC) has to be installed on all OpenStack nodes.
-- Configuration settings and credentials of Gateway.
 
 ## Steps
 
@@ -161,4 +159,6 @@ Install the Storage Data Client (SDC) on all nodes after deploying the overcloud
 
 ### Test the configured Backend
 Finally create a volume-type and test if you can successfully create and attach volumes of that type.
+
+
 
