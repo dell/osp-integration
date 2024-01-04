@@ -13,8 +13,8 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 ## Prerequisites
 
 - Red Hat OpenStack Platform 17.1 with RHEL 9.2.
-- PowerFlex 3.5 or 3.6
-- PowerFlex Storage Data Client (SDC) has to be installed on all OpenStack nodes.
+- PowerFlex 3.5 or 3.6 cluster.
+- PowerFlex Storage Data Client (SDC) for RHEL9.2.
 
 ## Steps
 
@@ -155,10 +155,24 @@ san_password = powerflex_password
 
 ### Install SDC
 
-Install the Storage Data Client (SDC) on all nodes after deploying the overcloud
+Install the PowerFlex Storage Data Client (SDC) on all nodes after deploying the overcloud.
 
 ### Test the configured Backend
-Finally create a volume-type and test if you can successfully create and attach volumes of that type.
+Finally, create a Powerflex volume type and test if you can successfully create and attach volumes of that type.
 
-
-
+Run the following command to check whether the Cinder service is started. 
+```
+[stack@rhosp-undercloud ~]$ source ~/overcloudrc
+(overcloud) [stack@rhosp-undercloud ~]$ cinder service-list
+```
+Run the following command in RHOSP Director to create a volume type mapped to the deployed backend.
+```
+[stack@rhosp-undercloud ~]$ source ~/overcloudrc
+(overcloud) [stack@rhosp-undercloud ~]$ cinder type-create powerflex1
+(overcloud) [stack@rhosp-undercloud ~]$ cinder type-key powerflex1 set volume_backend_name=tripleo_dellemc_powerflex
+```
+Create a volume using the type created above without error to ensure the availability of the backend.
+```
+[stack@rhosp-undercloud ~]$ source ~/overcloudrc
+(overcloud) [stack@rhosp-undercloud ~]$ cinder create --volume-type powerflex1 --size 8 powerflex_volume1
+```
