@@ -163,16 +163,16 @@ Finally, create a PowerFlex volume type and test if you can successfully create 
 Run the following command to check whether the Cinder service is started. 
 ```
 [stack@rhosp-undercloud ~]$ source ~/overcloudrc
-(overcloud) [stack@rhosp-undercloud ~]$ cinder service-list
+(overcloud) [stack@rhosp-undercloud ~]$ openstack volume service list
 ```
 Run the following command in RHOSP Director to create a volume type mapped to the deployed backend.
 ```
 [stack@rhosp-undercloud ~]$ source ~/overcloudrc
-(overcloud) [stack@rhosp-undercloud ~]$ cinder type-create powerflex1
-(overcloud) [stack@rhosp-undercloud ~]$ cinder type-key powerflex1 set volume_backend_name=tripleo_dellemc_powerflex
+(overcloud) [stack@rhosp-undercloud ~]$ openstack volume type create powerflex1
+(overcloud) [stack@rhosp-undercloud ~]$ openstack volume type set --property volume_backend_name=tripleo_dellemc_powerflex powerflex1
 ```
 Create a volume using the type created above without error to ensure the availability of the backend.
 ```
 [stack@rhosp-undercloud ~]$ source ~/overcloudrc
-(overcloud) [stack@rhosp-undercloud ~]$ cinder create --volume-type powerflex1 --size 8 powerflex_volume1
+(overcloud) [stack@rhosp-undercloud ~]$ openstack volume create --type powerflex1 --size 8 powerflex_volume1
 ```
