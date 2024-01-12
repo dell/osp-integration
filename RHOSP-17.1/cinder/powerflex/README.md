@@ -103,7 +103,7 @@ enabled_backends = tripleo_dellemc_powerflex
 [tripleo_dellemc_powerflex]
 volume_driver = cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver
 volume_backend_name = tripleo_dellemc_powerflex
-san_ip = GATEWAY_IP
+san_ip = POWERFLEX_GATEWAY_IP
 powerflex_storage_pools = Domain1:Pool1,Domain2:Pool2
 san_login = <login>
 san_password = <password>
