@@ -305,20 +305,39 @@ For more information see the Red Hat [Custom Block Storage Back End Deployment G
 
 ### Verify the configured changes
 
-When the director completes the overcloud deployment, check that the volume services are up using the openstack cli command. You can also verify that the cinder.conf in the cinder container and it should reflect changes made above.
-``` bash
-$ openstack volume service list
+When the director completes the overcloud deployment, check that the cinder-volume service is up using the openstack cli command. You can also verify that the cinder.conf in the cinder container and it should reflect changes made above.
+```
+[stack@rhosp-undercloud ~]$ source ~/overcloudrc
+(overcloud) [stack@rhosp-undercloud ~]$ openstack volume service list
++---------------+--------------------------------------+------+---------+-------+-----------------------------+
+| Binary        | Host                                 | Zone | Status  | State | Updated At                  |
++---------------+--------------------------------------+------+---------+-------+-----------------------------+
+... [Truncated]
+| cinder-volume | hostgroup@tripleo_dellemc_powerstore | nova | enabled | up    | 2024-01-12T02:36:02.000000  |
+... [Truncated]
 ```
 ### Testing the configured Backend
 After you deploy the back ends to the overcloud, create a volume-type per backend and test if you can successfully create and attach volumes of that type.
-
+As an example, creating a backend volume type for PowerStore would look like:
+```
+[stack@rhosp-undercloud ~]$ source ~/overcloudrc
+(overcloud) [stack@rhosp-undercloud ~]$ openstack volume type create powerstore
+(overcloud) [stack@rhosp-undercloud ~]$ openstack volume type set --property volume_backend_name=tripleo_dellemc_powerstore powerstore
+```
+Create a volume using the type created above without error to ensure the availability of the backend.
+```
+(overcloud) [stack@rhosp-undercloud ~]$ openstack volume create --type powerstore --size 8 powerstore_volume1
+```
+Confirm the volume was created successfully
+```
+(overcloud) [stack@rhosp-undercloud ~]$ openstack volume list
++--------------------------------------+--------------------+-----------+------+-------------+
+| ID                                   | Name               | Status    | Size | Attached to |
++--------------------------------------+--------------------+-----------+------+-------------+
+| 35808e76-c4cd-4ff6-8829-f16c76ebad37 | powerstore_volume1 | available | 8    |             |
++--------------------------------------+--------------------+-----------+------+-------------+
+```
+**NOTE**: You can repeat the above operations for each backend that you have configured in case you are using multi-backends setup
 ## References
 * [Red Hat OpenStack Platform Overcloud Custom Block Storage Backend Guide](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/17.0/html/custom_block_storage_back_end_deployment_guide/index)
-
-  
-
-
-
-
-
 
