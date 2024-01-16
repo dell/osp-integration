@@ -110,6 +110,33 @@ san_password = <password>
 san_thin_provision = false
 ...
 ```
+## Post deployment tasks
+
+### Install SDC
+
+Install the PowerFlex Storage Data Client (SDC) on all nodes after deploying the overcloud.
+
+### Configure the connector
+
+Before using attach/detach volume operations PowerFlex connector must be properly configured. On each node where PowerFlex SDC is installed do the following:
+
+Create `/opt/emc/scaleio/openstack/connector.conf` if it does not exist.
+
+```bash
+$ touch /opt/emc/scaleio/openstack/connector.conf
+```
+For each PowerFlex section in the cinder.conf create the same section in the `/opt/emc/scaleio/openstack/connector.conf` and populate it with passwords.
+
+Example:
+
+```
+[tripleo_dellemc_powerflex]
+san_password = powerflex_password
+
+[tripleo_dellemc_powerflex-new]
+san_password = powerflex_password
+```
+**NOTE**: In order to apply the changes, you will need to reboot each node on which the SDC kernel module (scini) runs.
 
 ### Test the configured Backend
 Finally, create a PowerFlex volume type and test if you can successfully create and attach volumes of that type.
@@ -143,33 +170,4 @@ Confirm the volume was created successfully
 +--------------------------------------+-------------------+-----------+------+-------------+
 | 35808e76-c4cd-4ff6-8829-f16c76ebad37 | powerflex_volume1 | available | 8    |             |
 +--------------------------------------+-------------------+-----------+------+-------------+
-```
-
-
-## Post deployment SDC configuration
-
-### Install SDC
-
-Install the PowerFlex Storage Data Client (SDC) on all nodes after deploying the overcloud.
-
-### Configure connector
-
-Before using attach/detach volume operations PowerFlex connector must be properly configured. On each node where PowerFlex SDC is installed do the following:
-
-Create `/opt/emc/scaleio/openstack/connector.conf` if it does not exist.
-
-```bash
-$ touch /opt/emc/scaleio/openstack/connector.conf
-```
-
-For each PowerFlex section in the cinder.conf create the same section in the `/opt/emc/scaleio/openstack/connector.conf` and populate it with passwords.
-
-Example:
-
-```
-[tripleo_dellemc_powerflex]
-san_password = powerflex_password
-
-[tripleo_dellemc_powerflex-new]
-san_password = powerflex_password
 ```
