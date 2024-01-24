@@ -17,7 +17,7 @@ The following Dell EMC storage drivers are fully integrated with director and ca
 * [PowerStore iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powerstore-driver.html) - see below
 * [PowerMax iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powermax-driver.html) - see below
 
-**Note:** The following drivers will be deprecated starting from the 2023.1 Antelope OpenStack upstream
+**Note:** The following drivers will be deprecated starting from the 2023.1 Antelope OpenStack upstream.
 * XtremIO iSCSI and FC drivers
 * SC Series FC and iSCSI drivers
 * VNX iSCSI and FC drivers
@@ -29,7 +29,7 @@ The following Dell EMC storage drivers are fully integrated with director and ca
 ## Deployment Steps
 
 ### Prepare the Environment File
-The environment file is an OSP director environment file. The environment file contains the settings for each back end you want to define. Using the environment file will ensure that the back end settings persist through future Overcloud updates and upgrades.  
+The environment file is an OSP director environment file. It contains the settings for each back end that you want to define. This approach will ensure that the back end settings persist through future Overcloud updates and upgrades.  
 
 Create the environment file that will orchestrate the back end settings. Use the sample file provided below for your specific backend.  
 
@@ -208,33 +208,26 @@ For full detailed instruction of options please refer to [PowerStore Backend Con
 
 **Environment sample**
 
-With a director deployment, PowerStore backend can be deployed using the integrated heat environment file. This file is located in the following path of the Undercloud node:
-/usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-powerstore-config.yaml
+With a director deployment, PowerStore backend can be deployed using the integrated heat environment file. This file is located in the following path on the director:
+`/usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-powerstore-config.yaml`.
 
-Copy this file to a local path where you can edit and invoke it later. For example, to copy it to ~/templates/:
+Create the `custom-dellemc-powerstore-config.yaml` file in your `~/templates/` directory.
 
-```bash
-$ cp /usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-powerstore-config.yaml ~/templates/
-```
-Afterwards, open the copy (~/templates/cinder-dellemc-powerstore-config.yaml) and edit it as you see fit. The following shows a sample content of the file. The files will list optional params that the user can choose to overwrite if they don't like the default value.
+Edit the file with your favorite editor and fill in the following settings to fit your environment. 
+
+**NOTE**: this method replaces the previous one which consisted of editing the heat environment file. This is no longer considered as a best practice and the preferred approach is to store all overrides into a separate file.
+
+Afterwards, open the copy (`~/templates/cinder-dellemc-powerflex-config.yaml`) and edit it as you see fit. The following shows a sample content of the file. The file will list optional params that the users can choose to override if they don't like the default value.
 
 ```yaml
-# A Heat environment file which can be used to enable a
-# Cinder Dell EMC PowerStore backend, configured via puppet.
-resource_registry:
-  OS::TripleO::Services::CinderBackendDellEMCPowerStore: ../deployment/cinder/cinder-backend-dellemc-powerstore-puppet.yaml
-
 parameter_defaults:
   CinderEnablePowerStoreBackend: true
   CinderPowerStoreBackendName: 'tripleo_dellemc_powerstore'
-  CinderPowerStoreMultiConfig: {}
-  CinderPowerStoreAvailabilityZone: ''
-  CinderPowerStoreSanIp: '10.10.10.10'
-  CinderPowerStoreSanLogin: 'admin'
-  CinderPowerStoreSanPassword: 'password'
-  CinderPowerStoreAppliances: 'appliance-1,appliance2'
-  CinderPowerStorePorts: '10.10.10.11,10.10.10.12'
-  CinderPowerStoreStorageProtocol: 'iSCSI'
+  CinderPowerStoreSanIp: 'PowerStore SAN IP'
+  CinderPowerStoreSanLogin: 'PowerStore SAN login'
+  CinderPowerStoreSanPassword: 'PowerStore SAN password'
+  CinderPowerStorePorts: 'PowerStore SAN ports'
+  CinderPowerStoreStorageProtocol: 'iSCSI|FC'
 
 # To configure multiple PowerStore backends differently, use CinderPowerStoreMultiConfig to
 # assign parameter values specific to each backend. For example:
@@ -246,66 +239,74 @@ parameter_defaults:
 #       CinderPowerStoreStorageProtocol: 'iSCSI' # Specific value for this backend
 #     tripleo_dellemc_powerstore_2:
 #       CinderPowerStoreStorageProtocol: 'FC' # Specific value for this backend
-```    
+```
+
+**NOTE**: All other values will be inherited from `/usr/share/openstack-tripleo-heat-templates/cinder-dellemc-powerstore-config.yaml`, including the resource_registry entry.
+    
 ### Deploy the configured backends
 
-When you have created the file dellemc-backend-env.yaml file with appropriate backends, deploy the backend configuration by running the openstack overcloud deploy command using the templates option. If you passed any extra environment files when you created the overcloud, pass them again here using the -e option. 
+Deploy the backend configuration by running the openstack overcloud deploy command using the appropriate templates. If you passed any extra environment files when you created the overcloud, pass them again here using the -e option. 
  
 ```bash
 (undercloud) $ openstack overcloud deploy --templates \
 -e /home/stack/templates/overcloud_images.yaml \
+-e /usr/share/openstack-tripleo-heat-templates/cinder-dellemc-powerstore-config.yaml \
 -e <other templates>
 .....
--e /home/stack/templates/dellemc-backend-env.yaml  \
+-e /home/stack/templates/custom-dellemc-powerstore-config.yaml
 ```
 
 ### Multiple Backend Deployment
-Multiple backends can be deployed at once (same kind of different kinds), The following sample environment file defines two PowerMax back ends, tripleo_emc_powermax1 using iSCSI driver and tripleo_emc_powermax2 using the FC driver:
+Multiple backends can be configured during deployment. Add the following stanza to other backends to deploy in a custom environment file. Then include this file to the `overcloud deploy` command.
 
 ```yaml
 parameter_defaults:
   ControllerExtraConfig:
     cinder::config::cinder_config:
-      tripleo_dellemc_powermax1/volume_driver:
-        value: cinder.volume.drivers.dell_emc.powermax.iscsi.PowerMaxISCSIDriver
-      tripleo_dellemc_powermax1/volume_backend_name:
-        value: tripleo_dellemc_powermax1
-      tripleo_dellemc_powermax1/san_ip:
-        value: '10.10.10.10'
-      tripleo_dellemc_powermax1/san_login:
-        value: 'my_username'
-      tripleo_dellemc_powermax1/san_password:
-        value: 'my_password'
-      tripleo_dellemc_powermax1/vmax_port_groups:
-        value: '[OS-ISCSI-PG]'
-      tripleo_dellemc_powermax1/vmax_array:
-        value: '000123456789'
-      tripleo_dellemc_powermax1/vmax_srp:
-        value: 'SRP_1'
-      tripleo_dellemc_powermax2/volume_driver:
-        value: cinder.volume.drivers.dell_emc.powermax.fc.PowerMaxFCDriver
-      tripleo_dellemc_powermax2/volume_backend_name:
-        value: tripleo_dellemc_powermax2
-      tripleo_dellemc_powermax2/san_ip:
-        value: '10.10.10.10'
-      tripleo_dellemc_powermax2/san_login:
-        value: 'my_username'
-      tripleo_dellemc_powermax22/san_password:
-        value: 'my_password'
-      tripleo_dellemc_powermax2/vmax_port_groups:
-        value: '[OS-FC-PG]'
-      tripleo_dellemc_powermax2/vmax_array:
-        value: '000123456789'
-      tripleo_dellemc_powermax2/vmax_srp:
-        value: 'SRP_1'
-    cinder_user_enabled_backends: ['tripleo_dellemc_powermax1', 'tripleo_dellemc_powermax2']
+      tripleo_dellemc_powerstore/volume_driver:
+        value: cinder.volume.drivers.dell_emc.powerstore.driver.PowerStoreDriver
+      tripleo_dellemc_powerstore/volume_backend_name:
+        value: tripleo_dellemc_powerstore
+      tripleo_dellemc_powerstore/san_ip:
+        value: '<PowerStore SAN IP>'
+      tripleo_dellemc_powerstore/san_login:
+        value: '<PowerStore SAN login>'
+      tripleo_dellemc_powerstore/san_password:
+        value: '<PowerStore SAN password>'
+      tripleo_dellemc_powerstore/powerstore_ports:
+        value: '<PowerStore SAN ports, can be WWPn or IPs separated by a comma>'
+      tripleo_dellemc_powerstore/storage_protocol:
+        value: '<iSCSI|FC>'
+      ...
+      <Other backends to configure> 
+      
+    cinder_user_enabled_backends: ['tripleo_dellemc_powerstore', ...]
 ```
 Do not use **cinder_user_enabled_backends** to list back ends that you can enable natively with director. 
-For more information see the Red Hat [Custom Block Storage Back End Deployment Guide](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/16.0/html/custom_block_storage_back_end_deployment_guide/envfile)
+For more information see the Red Hat [Custom Block Storage Back End Deployment Guide](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/17.1/html/deploying_a_custom_block_storage_back_end/proc_creating-custom-back-end-envfile_custom-cinder-back-end)
 
 ### Verify the configured changes
+When the director completes the overcloud deployment, edit the `/var/lib/containers/cinder/etc/cinder/cinder.conf` file with your favorite editor and verify that the powerstore backend has been configured correctly. 
+Depending on your environment, it may differ from the output below:
+```
+[DEFAULT]
+.. [output truncated]
 
-When the director completes the overcloud deployment, check that the cinder-volume service is up using the openstack cli command. You can also verify that the cinder.conf in the cinder container and it should reflect changes made above.
+enabled_backends = tripleo_dellemc_powerstore, <other backends>
+
+.. [output truncated]
+
+[triple_dellemc_powerstore]
+volume_driver = cinder.volume.drivers.dell_emc.powerstore.driver.PowerStoreDriver
+volume_backend_name = tripleo_dellemc_powerstore
+san_ip = 10.20.30.40
+san_login = admin
+san_password = password
+storage_protocol = iSCSI
+powerstore_ports = 10.20.30.41,10.20.30.42
+```
+
+Check that the cinder-volume service is up by using the `openstack volume service list` cli command.
 ```
 [stack@rhosp-undercloud ~]$ source ~/overcloudrc
 (overcloud) [stack@rhosp-undercloud ~]$ openstack volume service list
