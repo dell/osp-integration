@@ -9,7 +9,7 @@ This assumes that the RHOSP installation is done through RHOSP director toolset 
 
 
 The following Dell EMC storage drivers are fully integrated with director and can be deployed using tripleo heat templates 
-* [VNX iSCSI and FC drivers](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-vnx-driver.html) - Please refer to this [custom deployment guide for the VNX driver](https://github.com/emc-openstack/osp-deploy/tree/rhosp17.1/cinder)
+* [Unity iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-unity-driver.html) - Please refer to this [custom deployment guide for the Unity Driver](https://github.com/emc-openstack/osp-deploy/tree/rhosp17.1/cinder)
 * [PowerFlex drivers](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-powerflex-driver.html) - Please refer to this [Guide for the PowerFlex driver](https://github.com/dell/osp-integration/tree/master/RHOSP-17.1/cinder/powerflex/README.md) 
 * [PowerStore iSCSI and FC drivers](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-powerstore-driver.html) - see below
 * [PowerMax iSCSI and FC drivers](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-powermax-driver.html) - see below
