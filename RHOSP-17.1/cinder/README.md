@@ -164,7 +164,7 @@ parameter_defaults:
   CinderPowermaxPortGroups: 'PowerMax Port Group'
   CinderPowermaxStorageProtocol: 'FC'
 ```
-**NOTE**: The file shown above configures two Dell PowerStore backend and one Dell PowerMax backend. You can add other backends by specifying parameters and **resource_registry**. Finally, you can provide the template 
+**NOTE**: The file shown above configures two Dell PowerStore backends and one Dell PowerMax backend. You can add other backends by specifying parameters and **resource_registry**. Finally, you can provide the template 
 to the `openstack overcloud deploy` command as usual.
 
 
