@@ -9,7 +9,7 @@ This assumes that the RHOSP installation is done through RHOSP director toolset 
 
 
 The following Dell EMC storage drivers are fully integrated with director and can be deployed using tripleo heat templates 
-* [Unity iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-unity-driver.html) - Please refer to this [custom deployment guide for the Unity Driver](https://github.com/emc-openstack/osp-deploy/tree/rhosp17.1/cinder)
+* [Unity iSCSI and FC drivers](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-unity-driver.html) - Please refer to this [custom deployment guide for the Unity Driver](https://github.com/emc-openstack/osp-deploy/tree/rhosp17.1/cinder)
 * [PowerFlex drivers](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-powerflex-driver.html) - Please refer to this [Guide for the PowerFlex driver](https://github.com/dell/osp-integration/tree/master/RHOSP-17.1/cinder/powerflex/README.md) 
 * [PowerStore iSCSI and FC drivers](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-powerstore-driver.html) - see below
 * [PowerMax iSCSI and FC drivers](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-powermax-driver.html) - see below
@@ -62,7 +62,7 @@ parameter_defaults:
   CinderPowermaxSanIp: 'PowerMax SAN IP'
   CinderPowermaxSanLogin: 'PowerMax SAN login'
   CinderPowermaxSanPassword: 'PowerMax SAN password'
-  CinderPowermaxArray: 'PowerMax Seriel Number'
+  CinderPowermaxArray: 'PowerMax Serial Number'
   CinderPowermaxSrp: 'PowerMax Storage Resource Pool Name'
   CinderPowermaxPortGroups: 'PowerMax Port Group'
   CinderPowermaxStorageProtocol: 'ISCSI|FC'
@@ -99,17 +99,6 @@ parameter_defaults:
   CinderPowerStoreSanPassword: 'PowerStore SAN password'
   CinderPowerStorePorts: 'PowerStore SAN ports'
   CinderPowerStoreStorageProtocol: 'iSCSI|FC'
-
-# To configure multiple PowerStore backends differently, use CinderPowerStoreMultiConfig to
-# assign parameter values specific to each backend. For example:
-#   CinderPowerStoreBackendName:
-#     - tripleo_dellemc_powerstore_1
-#     - tripleo_dellemc_powerstore_2
-#   CinderPowerStoreMultiConfig:
-#     tripleo_dellemc_powerstore_1:
-#       CinderPowerStoreStorageProtocol: 'iSCSI' # Specific value for this backend
-#     tripleo_dellemc_powerstore_2:
-#       CinderPowerStoreStorageProtocol: 'FC' # Specific value for this backend
 ```
 
 **NOTE**: All other values will be inherited from `/usr/share/openstack-tripleo-heat-templates/cinder-dellemc-powerstore-config.yaml`, including the resource_registry entry.
@@ -141,6 +130,44 @@ Deploy the backend configuration by running the openstack overcloud deploy comma
 ```
 
 ### Multiple Backend Deployment
+To configure multiple Dell Cinder backends, define an environment file `~/templates/cinder-dellemc-multibackend-config.yaml` as follows:
+```yaml
+resource_registry:
+  OS::TripleO::Services::CinderBackendDellEMCPowerStore: /usr/share/openstack-tripleo-heat-templates/deployment/cinder/cinder-backend-dellemc-powerstore-puppet.yaml
+  OS::TripleO::Services::CinderBackendDellEMCPowermax: /usr/share/openstack-tripleo-heat-templates/deployment/cinder/cinder-backend-dellemc-powermax-puppet.yaml
+    
+parameter_defaults:
+  CinderEnableIscsiBackend: false
+  CinderEnablePowerStoreBackend: true
+  CinderPowerStoreMultiConfig:
+    tripleo_dellemc_powerstore1:
+      CinderPowerStoreBackendName: 'tripleo_dellemc_powerstore1'
+      CinderPowerStoreSanIp: 'PowerStore1 SAN IP'
+      CinderPowerStoreSanLogin: 'PowerStore1 SAN login'
+      CinderPowerStoreSanPassword: 'PowerStore1 SAN password'
+      CinderPowerStorePorts: 'PowerStore1 SAN ports'
+      CinderPowerStoreStorageProtocol: 'iSCSI|FC'
+    tripleo_dellemc_powerstore2:
+      CinderPowerStoreBackendName: 'tripleo_dellemc_powerstore2'
+      CinderPowerStoreSanIp: 'PowerStore2 SAN IP'
+      CinderPowerStoreSanLogin: 'PowerStore2 SAN login'
+      CinderPowerStoreSanPassword: 'PowerStore2 SAN password'
+      CinderPowerStorePorts: 'PowerStore2 SAN ports'
+      CinderPowerStoreStorageProtocol: 'iSCSI|FC'
+  CinderEnablePowermaxBackend: true
+  CinderPowermaxBackendName: tripleo_dellemc_powermax
+  CinderPowermaxSanIp: 'PowerMax SAN IP'
+  CinderPowermaxSanLogin: 'PowerMax SAN login'
+  CinderPowermaxSanPassword: 'PowerMax SAN password'
+  CinderPowermaxArray: 'PowerMax Serial Number'
+  CinderPowermaxSrp: 'PowerMax Storage Resource Pool Name'
+  CinderPowermaxPortGroups: 'PowerMax Port Group'
+  CinderPowermaxStorageProtocol: 'FC'
+```
+**NOTE**: The file shown above configures two Dell PowerStore backend and one Dell PowerMax backend. You can add other backends by specifying parameters and **resource_registry**. Finally, you can provide the template 
+to the `openstack overcloud deploy` command as usual.
+
+
 Multiple backends can be configured at a time during deployment. Add the appropriate templates and environment file to the the `overcloud deploy` command above if necessary.
  
 ### Verify the configured changes
