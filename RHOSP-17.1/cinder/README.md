@@ -12,12 +12,13 @@ The following Dell EMC storage drivers are fully integrated with director and ca
 * [Unity iSCSI and FC drivers](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-unity-driver.html) - Please refer to this [custom deployment guide for the Unity Driver](https://github.com/emc-openstack/osp-deploy/tree/rhosp17.1/cinder)
 * [PowerFlex drivers](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-powerflex-driver.html) - Please refer to this [Guide for the PowerFlex driver](https://github.com/dell/osp-integration/tree/master/RHOSP-17.1/cinder/powerflex/README.md) 
 * [PowerStore iSCSI and FC drivers](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-powerstore-driver.html) - see below
-* [PowerMax iSCSI and FC drivers](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-powermax-driver.html) - see below
 
 **Note:** The following drivers are no longer certified with RHOSP 17.1 and will be deprecated starting from 2023.1 Antelope release of OpenStack.
 * XtremIO iSCSI and FC drivers
 * SC Series FC and iSCSI drivers
 * VNX iSCSI and FC drivers
+
+**Note:** The PowerMax iSCSI and FC drivers are not yet certified with Red Hat for RHOSP 17.1 and therefore are intentionally not mentioned in this guide
 
 ## Prerequisites
 - Dell EMC Storage Backend configured as storage repository.
@@ -37,42 +38,7 @@ parameter_defaults:
   CinderEnableIscsiBackend: false
 ```
 
-#### 1. PowerMax iSCSI and FC drivers
-
-For full detailed instruction of options please refer to [PowerMax Backend Configuration](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-powermax-driver.html#configuration-options)
-
-**Environment sample**
-
-With a director deployment, PowerMax backend can be deployed using the integrated heat environment file. This file is located in the following path on the director:
-`/usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-powermax-config.yaml`.
-
-Create the `custom-dellemc-powermax-config.yaml` file in your `~/templates/` directory.
-
-Edit the file with your favorite editor and fill in the following settings to fit your environment. 
-
-**NOTE**: this method replaces the previous one which consisted of editing the heat environment file. This is no longer considered as a best practice and the preferred approach is to store all overrides into a separate file.
-
-Afterwards, open the copy (`~/templates/cinder-dellemc-powermax-config.yaml`) and edit it as you see fit. The following shows a sample content of the file. The file will list optional params that the users can choose to override if they don't like the default value.
-
-```yaml
-parameter_defaults:
-  CinderEnableIscsiBackend: false
-  CinderEnablePowermaxBackend: true
-  CinderPowermaxBackendName: tripleo_dellemc_powermax
-  CinderPowermaxSanIp: 'PowerMax SAN IP'
-  CinderPowermaxSanLogin: 'PowerMax SAN login'
-  CinderPowermaxSanPassword: 'PowerMax SAN password'
-  CinderPowermaxArray: 'PowerMax Serial Number'
-  CinderPowermaxSrp: 'PowerMax Storage Resource Pool Name'
-  CinderPowermaxPortGroups: 'PowerMax Port Group'
-  CinderPowermaxStorageProtocol: 'ISCSI|FC'
-```
-
-**NOTE**: All other values will be inherited from `/usr/share/openstack-tripleo-heat-templates/cinder-dellemc-powermax-config.yaml`, including the resource_registry entry.
-
-From there, you can add the template `~/templates/cinder-dellemc-powermax-config.yaml` and the environment file `~/templates/custom-dellemc-powermax-config.yaml` to the openstack overcloud deploy command
-
-#### 2. PowerStore iSCSI and FC drivers    
+#### PowerStore iSCSI and FC drivers    
   
 For full detailed instruction of options please refer to [PowerStore Backend Configuration](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-powerstore-driver.html#driver-configuration)
 
@@ -132,41 +98,26 @@ Deploy the backend configuration by running the openstack overcloud deploy comma
 ### Multiple Backend Deployment
 To configure multiple Dell Cinder backends, define an environment file `~/templates/cinder-dellemc-multibackend-config.yaml` as follows:
 ```yaml
-resource_registry:
-  OS::TripleO::Services::CinderBackendDellEMCPowerStore: /usr/share/openstack-tripleo-heat-templates/deployment/cinder/cinder-backend-dellemc-powerstore-puppet.yaml
-  OS::TripleO::Services::CinderBackendDellEMCPowermax: /usr/share/openstack-tripleo-heat-templates/deployment/cinder/cinder-backend-dellemc-powermax-puppet.yaml
-    
 parameter_defaults:
   CinderEnableIscsiBackend: false
   CinderEnablePowerStoreBackend: true
+  CinderPowerStoreBackendName:
+    - tripleo_dellemc_powerstore1
+    - tripleo_dellemc_powerstore2
   CinderPowerStoreMultiConfig:
     tripleo_dellemc_powerstore1:
-      CinderPowerStoreBackendName: 'tripleo_dellemc_powerstore1'
       CinderPowerStoreSanIp: 'PowerStore1 SAN IP'
       CinderPowerStoreSanLogin: 'PowerStore1 SAN login'
       CinderPowerStoreSanPassword: 'PowerStore1 SAN password'
       CinderPowerStorePorts: 'PowerStore1 SAN ports'
       CinderPowerStoreStorageProtocol: 'iSCSI|FC'
     tripleo_dellemc_powerstore2:
-      CinderPowerStoreBackendName: 'tripleo_dellemc_powerstore2'
       CinderPowerStoreSanIp: 'PowerStore2 SAN IP'
       CinderPowerStoreSanLogin: 'PowerStore2 SAN login'
       CinderPowerStoreSanPassword: 'PowerStore2 SAN password'
       CinderPowerStorePorts: 'PowerStore2 SAN ports'
       CinderPowerStoreStorageProtocol: 'iSCSI|FC'
-  CinderEnablePowermaxBackend: true
-  CinderPowermaxBackendName: tripleo_dellemc_powermax
-  CinderPowermaxSanIp: 'PowerMax SAN IP'
-  CinderPowermaxSanLogin: 'PowerMax SAN login'
-  CinderPowermaxSanPassword: 'PowerMax SAN password'
-  CinderPowermaxArray: 'PowerMax Serial Number'
-  CinderPowermaxSrp: 'PowerMax Storage Resource Pool Name'
-  CinderPowermaxPortGroups: 'PowerMax Port Group'
-  CinderPowermaxStorageProtocol: 'FC'
 ```
-**NOTE**: The file shown above configures two Dell PowerStore backends and one Dell PowerMax backend. You can add other backends by specifying parameters and **resource_registry**. Finally, you can provide the template 
-to the `openstack overcloud deploy` command as usual.
-
 
 Multiple backends can be configured at a time during deployment. Add the appropriate templates and environment file to the the `overcloud deploy` command above if necessary.
  
