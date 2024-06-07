@@ -13,7 +13,7 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 ## Prerequisites
 
 - Red Hat OpenStack Platform 17.1 with RHEL 9.2.
-- PowerFlex 3.5 or 3.6 cluster.
+- PowerFlex 3.x or 4.x cluster.
 - PowerFlex Storage Data Client (SDC) for RHEL9.2.
 
 ## Steps
