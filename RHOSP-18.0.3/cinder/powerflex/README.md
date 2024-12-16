@@ -1,6 +1,6 @@
-# Dell EMC PowerFlex Backend Deployment Guide for Red Hat OpenStack Platform 17.1
+# Dell EMC PowerFlex Backend Deployment Guide for Red Hat OpenStack Platform 18.0
 
-Deployment tools for Dell EMC PowerFlex (formerly VxFlex OS/ScaleIO) support in RedHat OpenStack Platform 17.1.
+Deployment tools for Dell EMC PowerFlex (formerly VxFlex OS/ScaleIO) support in RedHat OpenStack Platform 18.0
 
 ## Overview
 
@@ -8,13 +8,13 @@ This instruction provide detailed steps on how to enable PowerFlex.
 
 **NOTICE**: this README represents only the **basic** steps necessary to enable PowerFlex driver. It does not contain steps on how update the overcloud or other components of the system applicable to your particular installation.
 
-For more information please refer to [Product Documentation for Red Hat OpenStack Platform 17.1](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/17.1/).
+For more information please refer to [Product Documentation for Red Hat OpenStack Platform 18.0](https://docs.redhat.com/en/documentation/red_hat_openstack_services_on_openshift/18.0/).
 
 ## Prerequisites
 
-- Red Hat OpenStack Platform 17.1 with RHEL 9.2.
-- PowerFlex 3.x or 4.x cluster.
-- PowerFlex Storage Data Client (SDC) for RHEL9.2.
+- Red Hat OpenStack Platform 18.0 with RHEL 9.6.
+- PowerFlex 4.x cluster.
+- PowerFlex Storage Data Client (SDC) for RHEL9.6.
 
 ## Steps
 
