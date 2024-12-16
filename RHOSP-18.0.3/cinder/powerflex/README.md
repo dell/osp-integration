@@ -22,8 +22,8 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 To enable the OpenStack workloads to consume PowwerFlex as backend follow the below instructions:
 
 * Create a Secret CR file powerflex-secret.yaml
-  ```yaml
-  apiVersion: v1
+  ```yaml  
+apiVersion: v1
 kind: Secret
 metadata:
   labels:
@@ -38,10 +38,12 @@ stringData:
     san_password=PF_Manager_password
 type: Opaque
 ```
+
 * Apply the CR file by
 ```yaml
 oc create -f powerflex-secret.yaml
 ```
+
 * Verify the secret is created
   ```yaml
   oc describe secret/cinder-volume-powerflex-secrets
