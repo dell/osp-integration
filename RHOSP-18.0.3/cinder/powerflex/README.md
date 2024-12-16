@@ -65,7 +65,7 @@ cinderVolumes:
             [powerflex]
             volume_driver = cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver
             volume_backend_name = powerflex
-            powerflex_storage_pools = Env11-PD1:Env11-SP1
+            powerflex_storage_pools = Domain1:Pool1,Domain2:Pool2
           customServiceConfigSecrets:
           - cinder-volume-powerflex-secrets
           debug:
@@ -81,9 +81,9 @@ Save and exit the file, the prompt tells you that the CR was edited. Verify the 
 ```
 oc get pods -n openstack | grep powerflex
 
-[admin@rhadmin final]$ oc get pods -n openstack | grep powerflex
+[admin@rhadmin ~]$ oc get pods -n openstack | grep powerflex
 cinder-volume-powerflex-0                                       2/2     Running     0             4d
-[admin@rhadmin final]$
+[admin@rhadmin ~]$
 
 ```
 
@@ -135,6 +135,23 @@ vi storage_csm_powerflex_v292.yaml
             value: "MDM_IP"
 ... [Truncated]
 ```
+Apply the CR file to the OpenShift cluster. 
+```
+oc create -f storage_csm_powerflex_v2110.yaml
+```
+
+Confirm the SDC are now running as containers on worker nodes
+```
+[admin@rhadmin ~]$ oc get pods -n vxflexos
+NAME                                  READY   STATUS    RESTARTS   AGE
+vxflexos-controller-cb9855d69-7p9d4   5/5     Running   0          31d
+vxflexos-node-9f69t                   2/2     Running   2          31d
+vxflexos-node-kgrkd                   2/2     Running   2          31d
+vxflexos-node-vzfpm                   2/2     Running   2          31d
+[admin@rhadmin ~]$
+```
+
+
 
 ### Deploy the configured backends
 
@@ -168,10 +185,6 @@ san_thin_provision = false
 ...
 ```
 ## Post deployment tasks
-
-### Install SDC
-
-Install the PowerFlex Storage Data Client (SDC) on all nodes after deploying the overcloud.
 
 ### Configure the connector
 
