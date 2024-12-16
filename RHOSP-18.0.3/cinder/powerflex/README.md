@@ -99,7 +99,7 @@ Follow the documentation located here https://dell.github.io/csm-docs/docs/deplo
 
 Create a config json file as follows
 
-```yaml
+```ini
 vi config.json
 [
      {
@@ -151,44 +151,11 @@ vxflexos-node-vzfpm                   2/2     Running   2          31d
 [admin@rhadmin ~]$
 ```
 
-
-
-### Deploy the configured backends
-
-When you have created the file `cinder-dellemc-powerflex-config.yaml` file with appropriate backends, deploy the backend configuration by running the openstack overcloud deploy command using the templates option. If you passed any extra environment files when you created the overcloud, pass them again here using the -e option. 
- 
-```bash
-(undercloud) $ openstack overcloud deploy --templates \
--e /home/stack/templates/overcloud_images.yaml \
--e /usr/share/openstack-tripleo-heat-templates/cinder-dellemc-powerflex-config.yaml
--e <other templates>
-.....
--e /home/stack/templates/custom-dellemc-powerflex-config.yaml
-```
-
-### Verify configured changes
-
-After the deployment finishes successfully, `/etc/cinder/cinder.conf` in the Cinder container should reflect changes made above.
-
-```ini
-[DEFAULT]
-enabled_backends = tripleo_dellemc_powerflex
-
-[tripleo_dellemc_powerflex]
-volume_driver = cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver
-volume_backend_name = tripleo_dellemc_powerflex
-san_ip = POWERFLEX_GATEWAY_IP
-powerflex_storage_pools = Domain1:Pool1,Domain2:Pool2
-san_login = <login>
-san_password = <password>
-san_thin_provision = false
-...
-```
 ## Post deployment tasks
 
 ### Configure the connector
 
-Before using attach/detach volume operations PowerFlex connector must be properly configured. On each node where PowerFlex SDC is installed do the following:
+Before using attach/detach volume operations PowerFlex connector must be properly configured. Before the daaplane is installed, on each of the EDPM nodes do the following:
 
 Create `/opt/emc/scaleio/openstack/connector.conf` if it does not exist.
 
@@ -200,13 +167,13 @@ For each PowerFlex section in the cinder.conf create the same section in the `/o
 Example:
 
 ```
-[tripleo_dellemc_powerflex]
+[powerflex]
 san_password = powerflex_password
 
-[tripleo_dellemc_powerflex-new]
+[powerflex-new]
 san_password = powerflex_password
 ```
-**NOTE**: In order to apply the changes, you will need to reboot each node on which the SDC kernel module (scini) runs.
+
 
 ### Test the configured Backend
 Finally, create a PowerFlex volume type and test if you can successfully create and attach volumes of that type.
