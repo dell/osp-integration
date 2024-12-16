@@ -18,17 +18,34 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 
 ## Steps
 
-### Prepare the Environment File for PowerFlex cinder backend
-The environment file is a OSP director environment file. The environment file contains the settings for each back end you want to define. Using the environment file will ensure that the back end settings persist through future Overcloud updates and upgrades.  
+### Prepare the environment for PowerFlex cinder backend
+To enable the OpenStack workloads to consume PowwerFlex as backend follow the below instructions:
 
-Create the environment file that will orchestrate the back end settings. Use the sample file provided below for your specific backend.  
-
-**NOTICE**: **LVM driver** is enabled by default in TripleO, set the ```CinderEnableIscsiBackend``` to false in one of your environment files to turn it off.
-```yaml
-parameter_defaults:
-  CinderEnableIscsiBackend: false
+* Create a Secret CR file powerflex-secret.yaml
+  ```yaml
+  apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    component: cinder-volume
+    service: cinder
+  name: cinder-volume-powerflex-secrets
+stringData:
+  powerflex-secrets.conf: |
+    [powerflex]
+    san_ip=PF_Manager_IP
+    san_login=PF_Manager_login
+    san_password=PF_Manager_password
+type: Opaque
 ```
-
+* Apply the CR file by
+```yaml
+oc create -f powerflex-secret.yaml
+```
+* Verify the secret is created
+  ```yaml
+  oc describe secret/cinder-volume-powerflex-secrets
+  ```
 For full detailed instruction of all options please refer to [PowerFlex Backend Configuration](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-powerflex-driver.html).
 
 **Environment sample**
