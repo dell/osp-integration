@@ -162,7 +162,7 @@ Create `/opt/emc/scaleio/openstack/connector.conf` if it does not exist.
 ```bash
 $ touch /opt/emc/scaleio/openstack/connector.conf
 ```
-For each PowerFlex section in the cinder.conf create the same section in the `/opt/emc/scaleio/openstack/connector.conf` and populate it with passwords.
+Edit the `/opt/emc/scaleio/openstack/connector.conf` and populate it with passwords.
 
 Example:
 
@@ -174,21 +174,31 @@ san_password = powerflex_password
 san_password = powerflex_password
 ```
 
+Before the dataplane is deployed, in the `dataplane-nodeset.yaml` enter the following
+```
+edpm_network_config_template: |
+...
+edpm_nova_extra_bind_mounts:
+  - src: /opt/emc/scaleio/openstack/connector.conf
+    dest: /opt/emc/scaleio/openstack/connector.conf
+    options: "ro"
+```
 
 ### Test the configured Backend
 Finally, create a PowerFlex volume type and test if you can successfully create and attach volumes of that type.
 
 Run the following command to check whether the cinder-volume service is up. 
 ```
-[stack@rhosp-undercloud ~]$ source ~/overcloudrc
-(overcloud) [stack@rhosp-undercloud ~]$ openstack volume service list
-+---------------+-------------------------------------+------+---------+-------+-----------------------------+
-| Binary        | Host                                | Zone | Status  | State | Updated At                  |
-+---------------+-------------------------------------+------+---------+-------+-----------------------------+
-... [Truncated]
-| cinder-volume | hostgroup@tripleo_dellemc_powerflex | nova | enabled | up    | 2024-01-12T02:36:02.000000  |
-... [Truncated]
-```
+[admin@rhadmin ~]$ oc rsh openstackclient
+sh-5.1$ openstack volume service list
++------------------+-------------------------------------+------+---------+-------+----------------------------+
+| Binary           | Host                                | Zone | Status  | State | Updated At                 |
++------------------+-------------------------------------+------+---------+-------+----------------------------+
+| cinder-scheduler | cinder-scheduler-0                  | nova | enabled | up    | 2024-12-16T09:24:50.000000 |
+| cinder-volume    | cinder-volume-powerflex-0@powerflex | nova | enabled | up    | 2024-12-16T09:24:58.000000 |
+| cinder-backup    | cinder-backup-0                     | nova | enabled | up    | 2024-12-16T09:24:49.000000 |
++------------------+-------------------------------------+------+---------+-------+----------------------------+
+
 Create a volume type mapped to the deployed backend.
 ```
 [stack@rhosp-undercloud ~]$ source ~/overcloudrc
