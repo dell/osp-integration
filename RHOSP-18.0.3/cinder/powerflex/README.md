@@ -87,55 +87,55 @@ cinder-volume-powerflex-0                                       2/2     Running 
 
 ```
 
-
-**Environment sample**
-
-With a director deployment, PowerFlex backend can be deployed using the integrated heat environment file. This file is located in the following path of the Undercloud node:
-`/usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-powerflex-config.yaml`.
-
-Create the `custom-dellemc-powerflex-config.yaml` file in your `~/templates/` directory.
-
-Edit the file with your favorite editor and fill in the following settings to fit your environment. 
-
-**NOTE**: this method replaces the previous one which consisted of editing the heat environment file. This is nolonger considered as a best practice and the preferred approach is to store all overrides into a separate file
-
-Afterwards, open the copy (`~/templates/cinder-dellemc-powerflex-config.yaml`) and edit it as you see fit. The following shows a sample content of the file. The files will list optional params that the user can choose to override if they don't like the default value.
-
-```yaml
-parameter_defaults:
-  CinderEnablePowerFlexBackend: true
-  CinderPowerFlexBackendName: 'tripleo_dellemc_powerflex'
-  CinderPowerFlexSanIp: '<PowerFlex SAN IP>'
-  CinderPowerFlexSanLogin: '<PowerFlex SAN Login>'
-  CinderPowerFlexSanPassword: '<PowerFlex SAN Password>'
-  CinderPowerFlexStoragePools: '<PowerFlex Domain:PowerFlex Storage Pool>'
-```
-
-**NOTE**: All other values will be inherited from /usr/share/openstack-tripleo-heat-templates/cinder-dellemc-powerflex-config.yaml, including the resource_registry entry.
 ### Prepare custom volume mappings for connector configuration 
 
 PowerFlex SDC needs to be installed on the following nodes:
 * Controller nodes 
 * Compute nodes
 
-Create the directory where the connector file will reside.
+To install SDC, deploy the Dell Container Storage Module operator. From the OpenShift operator hub, search Dell Container Storage modeules and pick the certified operator. Follow the wizard with all the deault values and install the operator. 
 
-```bash
-$ mkdir -p /opt/emc/scaleio/openstack
-```
+Follow the documentation located here https://dell.github.io/csm-docs/docs/deployment/csmoperator/drivers/powerflex/ to install a PowerFlex CSI driver for the remaining steps.
 
-Edit the `custom-dellemc-powerflex-config.yaml` again and add the following parameters to the `parameter_defaults` section
+Create a config json file as follows
 
 ```yaml
-  NovaComputeOptVolumes:
-    - /opt/emc/scaleio/openstack:/opt/emc/scaleio/openstack
-  CinderVolumeOptVolumes:
-    - /opt/emc/scaleio/openstack:/opt/emc/scaleio/openstack
-  CinderBackupOptVolumes:
-    - /opt/emc/scaleio/openstack:/opt/emc/scaleio/openstack
-  GlanceApiOptVolumes:
-    - /opt/emc/scaleio/openstack:/opt/emc/scaleio/openstack
+vi config.json
+[
+     {
+         "username": "PF_Manager_login",
+         "password": "PF_Manager_password",
+         "systemID": "SYSTEM_ID",
+         "endpoint": "PF_MGR-IP:443",
+         "insecure": true,
+         "isDefault": true,
+         "mdm": "MDM_IP",
+         "nasName": "none"
+      }
+ ]
 ```
+
+Create a secret using
+
+```
+oc create secret generic vxflexos-config -n vxflexos --from-file=config=./config.json
+```
+
+From the sample available at https://github.com/dell/csm-operator/blob/main/samples/storage_csm_powerflex_v2110.yaml , create a CR file. Replace the MDM virtual IP by your environment.
+
+```
+vi storage_csm_powerflex_v292.yaml
+... [Truncated]
+    initContainers:
+      - image: dellemc/sdc:4.5
+        imagePullPolicy: IfNotPresent
+        name: sdc
+        envs:
+          - name: MDM
+            value: "MDM_IP"
+... [Truncated]
+```
+
 ### Deploy the configured backends
 
 When you have created the file `cinder-dellemc-powerflex-config.yaml` file with appropriate backends, deploy the backend configuration by running the openstack overcloud deploy command using the templates option. If you passed any extra environment files when you created the overcloud, pass them again here using the -e option. 
