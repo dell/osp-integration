@@ -6,7 +6,7 @@ Deployment tools for Dell EMC PowerFlex (formerly VxFlex OS/ScaleIO) support in 
 
 This instruction provide detailed steps on how to enable PowerFlex.
 
-**NOTICE**: this README represents only the **basic** steps necessary to enable PowerFlex driver. It does not contain steps on how update the overcloud or other components of the system applicable to your particular installation.
+**NOTICE**: this README represents only the **basic** steps necessary to enable PowerFlex driver. It does not contain steps other components of the system applicable to your particular installation.
 
 For more information please refer to [Product Documentation for Red Hat OpenStack Platform 18.0](https://docs.redhat.com/en/documentation/red_hat_openstack_services_on_openshift/18.0/).
 
@@ -46,10 +46,36 @@ oc create -f powerflex-secret.yaml
 ```
 
 * Verify the secret is created
-  ```yaml
-  oc describe secret/cinder-volume-powerflex-secrets
-  ```
+```yaml
+oc describe secret/cinder-volume-powerflex-secrets
+```
 For full detailed instruction of all options please refer to [PowerFlex Backend Configuration](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-powerflex-driver.html).
+
+* Edit the existing OpenStackControlPlane CR
+```
+oc edit openstackcontrolplane
+```
+Modify the cinderVolumes section as follows
+```
+...
+cinderVolumes:
+        powerflex:
+          containerImage: registry.redhat.io/rhosp-dev-preview/openstack-cinder-volume-rhel9:18.0
+          customServiceConfig: |
+            [powerflex]
+            volume_driver = cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver
+            volume_backend_name = powerflex
+            powerflex_storage_pools = Env11-PD1:Env11-SP1
+          customServiceConfigSecrets:
+          - cinder-volume-powerflex-secrets
+          debug:
+            service: false
+          networkAttachments:
+          - storage
+          replicas: 1
+          resources: {}
+...
+```
 
 **Environment sample**
 
