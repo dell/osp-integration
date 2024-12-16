@@ -76,6 +76,17 @@ cinderVolumes:
           resources: {}
 ...
 ```
+Save and exit the file, the prompt tells you that the CR was edited. Verify the pod is running
+
+```
+oc get pods -n openstack | grep powerflex
+
+[admin@rhadmin final]$ oc get pods -n openstack | grep powerflex
+cinder-volume-powerflex-0                                       2/2     Running     0             4d
+[admin@rhadmin final]$
+
+```
+
 
 **Environment sample**
 
