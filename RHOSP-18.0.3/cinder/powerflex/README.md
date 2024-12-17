@@ -151,9 +151,7 @@ vxflexos-node-vzfpm                   2/2     Running   2          31d
 [admin@rhadmin ~]$
 ```
 
-## Post deployment tasks
-
-### Configure the connector
+## Configure the connector
 
 Before using attach/detach volume operations PowerFlex connector must be properly configured. Before the daaplane is installed, on each of the EDPM nodes do the following:
 
@@ -182,6 +180,46 @@ edpm_nova_extra_bind_mounts:
   - src: /opt/emc/scaleio/openstack/connector.conf
     dest: /opt/emc/scaleio/openstack/connector.conf
     options: "ro"
+```
+
+Create PowerFlex connector secret 
+```yaml
+vi powerflex-connector-secret.yaml
+
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    component: cinder-volume
+    service: cinder
+  name: powerflex-connector-conf-files
+stringData:
+  connector.conf: |
+    [powerflex]
+    san_password=PF_Manager_password
+type: Opaque
+```
+
+Edit the existing OpenStackControlPlane CR and add an extraMount specification as follows
+```
+...  
+spec:
+  extraMounts:
+  - extraVol:
+    - extraVolType: powerflex
+      mounts:
+      - mountPath: /opt/emc/scaleio/openstack
+        name: powerflex-connector
+        readOnly: true
+      propagation:
+      - CinderVolume
+      volumes:
+      - name: powerflex-connector
+        secret:
+          secretName: powerflex-connector-conf-files
+    name: v1
+    region: r1
+ ...
 ```
 
 ### Test the configured Backend
