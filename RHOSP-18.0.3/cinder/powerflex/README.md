@@ -198,23 +198,52 @@ sh-5.1$ openstack volume service list
 | cinder-volume    | cinder-volume-powerflex-0@powerflex | nova | enabled | up    | 2024-12-16T09:24:58.000000 |
 | cinder-backup    | cinder-backup-0                     | nova | enabled | up    | 2024-12-16T09:24:49.000000 |
 +------------------+-------------------------------------+------+---------+-------+----------------------------+
+```
+Check if a volume type 'powerflex' is created.
+```
+sh-5.1$ openstack volume type list
++--------------------------------------+--------------------------------+-----------+
+| ID                                   | Name                           | Is Public |
++--------------------------------------+--------------------------------+-----------+
+| e8a9dcd6-e063-43ea-8132-e6e5e801530e | powerflex                      | True      |
 
-Create a volume type mapped to the deployed backend.
 ```
-[stack@rhosp-undercloud ~]$ source ~/overcloudrc
-(overcloud) [stack@rhosp-undercloud ~]$ openstack volume type create powerflex1
-(overcloud) [stack@rhosp-undercloud ~]$ openstack volume type set --property volume_backend_name=tripleo_dellemc_powerflex powerflex1
-```
+
 Create a volume using the type created above without error to ensure the availability of the backend.
 ```
-(overcloud) [stack@rhosp-undercloud ~]$ openstack volume create --type powerflex1 --size 8 powerflex_volume1
+sh-5.1$ openstack volume create --type powerflex --size 8 pf_vol1
++---------------------+--------------------------------------+
+| Field               | Value                                |
++---------------------+--------------------------------------+
+| attachments         | []                                   |
+| availability_zone   | nova                                 |
+| bootable            | false                                |
+| consistencygroup_id | None                                 |
+| created_at          | 2024-12-17T04:52:49.774884           |
+| description         | None                                 |
+| encrypted           | False                                |
+| id                  | 68645dfc-b946-4d76-9875-195095c0e9ec |
+| migration_status    | None                                 |
+| multiattach         | False                                |
+| name                | pf_vol1                              |
+| properties          |                                      |
+| replication_status  | None                                 |
+| size                | 8                                    |
+| snapshot_id         | None                                 |
+| source_volid        | None                                 |
+| status              | creating                             |
+| type                | powerflex                            |
+| updated_at          | None                                 |
+| user_id             | 3bbbbe7f703b4c75a8d3030b7ed43d84     |
++---------------------+--------------------------------------+
+
 ```
 Confirm the volume was created successfully
 ```
-(overcloud) [stack@rhosp-undercloud ~]$ openstack volume list
-+--------------------------------------+-------------------+-----------+------+-------------+
-| ID                                   | Name              | Status    | Size | Attached to |
-+--------------------------------------+-------------------+-----------+------+-------------+
-| 35808e76-c4cd-4ff6-8829-f16c76ebad37 | powerflex_volume1 | available | 8    |             |
-+--------------------------------------+-------------------+-----------+------+-------------+
+sh-5.1$ openstack volume list
++--------------------------------------+---------+--------+------+-----------------+
+| ID                                   | Name    | Status     | Size | Attached to |
++--------------------------------------+---------+--------+------+-----------------+
+| 68645dfc-b946-4d76-9875-195095c0e9ec | pf_vol1 | available  | 8    |             |
++--------------------------------------+---------+--------+------+-----------------+
 ```
