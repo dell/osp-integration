@@ -93,7 +93,7 @@ PowerFlex SDC needs to be installed on the following nodes:
 * Controller nodes 
 * Compute nodes
 
-To install SDC, deploy the Dell Container Storage Module operator. From the OpenShift operator hub, search Dell Container Storage modeules and pick the certified operator. Follow the wizard with all the deault values and install the operator. 
+To install SDC on the controller nodes, deploy the Dell Container Storage Module operator. From the OpenShift operator hub, search Dell Container Storage modeules and pick the certified operator. Follow the wizard with all the deault values and install the operator. 
 
 Follow the documentation located here https://dell.github.io/csm-docs/docs/deployment/csmoperator/drivers/powerflex/ to install a PowerFlex CSI driver for the remaining steps.
 
@@ -150,6 +150,13 @@ vxflexos-node-kgrkd                   2/2     Running   2          31d
 vxflexos-node-vzfpm                   2/2     Running   2          31d
 [admin@rhadmin ~]$
 ```
+
+To install SDC on the compute(EDPM) nodes
+
+* Get the MDM IP's from PowerFlex
+* Copy the EMC-ScaleIO-sdc-*.rpm which corresponds to your RHEL OS level version to the EDPM nodes
+* Install the RPM as the root user
+* Repeat the steps for every remaining EDPM node.
 
 ## Configure the connector
 
