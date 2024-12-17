@@ -156,7 +156,8 @@ To install SDC on the compute(EDPM) nodes
 * Get the MDM IP's from PowerFlex
 * Copy the EMC-ScaleIO-sdc-*.rpm which corresponds to your RHEL OS level version to the EDPM nodes
 * Install the RPM as the root user
-* Repeat the steps for every remaining EDPM node.
+* Repeat the steps for every remaining EDPM node
+* Confirm the SDC is connected to the PowerFlex system by logging on to PowerFlex Manager, navigate to Block → Hosts 
 
 ## Configure the connector
 
