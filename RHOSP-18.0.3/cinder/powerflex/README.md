@@ -12,9 +12,9 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 
 ## Prerequisites
 
-- Red Hat OpenStack Platform 18.0 with RHEL 9.6.
+- Red Hat OpenStack Platform 18.0 with RHEL 9.4.
 - PowerFlex 4.x cluster.
-- PowerFlex Storage Data Client (SDC) for RHEL9.6.
+- PowerFlex Storage Data Client (SDC) for RHEL9.4.
 
 ## Steps
 
