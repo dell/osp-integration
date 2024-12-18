@@ -104,8 +104,8 @@ Create a config json file as follows
 * endpoint :	REST API gateway HTTPS endpoint/PowerFlex Manager public IP for PowerFlex system. 
 * skipCertificateValidation :	Determines if the driver is going to validate certs while connecting to PowerFlex REST API interface. 
 * isDefault: An array having isDefault=true is for backward compatibility.  
-* mdm: mdm defines the MDM(s) that SDC should register with on start. This should be a list of MDM IP addresses or hostnames separated by comma.	true	-
-* nasName:	nasName defines what NAS should be used for NFS volumes. NFS volumes are supported on arrays version >=4.0.x	false	""
+* mdm: mdm defines the MDM(s) that SDC should register with on start. This should be a list of MDM IP addresses or hostnames separated by comma.	
+* nasName:	nasName defines what NAS should be used for NFS volumes. NFS volumes are supported on arrays version >=4.0.x	
 
 ```ini
 vi config.json
