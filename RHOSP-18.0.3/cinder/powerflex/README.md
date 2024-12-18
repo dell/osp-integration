@@ -98,15 +98,14 @@ To install SDC on the controller nodes, deploy the Dell Container Storage Module
 Follow the documentation located here https://dell.github.io/csm-docs/docs/deployment/csmoperator/drivers/powerflex/ to install a PowerFlex CSI driver for the remaining steps.
 
 Create a config json file as follows
-
-username	: Username for accessing PowerFlex system. If authorization is enabled, username will be ignored.
-password : Password for accessing PowerFlex system. If authorization is enabled, password will be ignored. 
-systemID : PowerFlex system name or ID.	
-endpoint :	REST API gateway HTTPS endpoint/PowerFlex Manager public IP for PowerFlex system. 
-skipCertificateValidation :	Determines if the driver is going to validate certs while connecting to PowerFlex REST API interface. 
-isDefault : An array having isDefault=true is for backward compatibility.  
-mdm : mdm defines the MDM(s) that SDC should register with on start. This should be a list of MDM IP addresses or hostnames separated by comma.	true	-
-nasName :	nasName defines what NAS should be used for NFS volumes. NFS volumes are supported on arrays version >=4.0.x	false	""
+* username : Username for accessing PowerFlex system. If authorization is enabled, username will be ignored.
+* password : Password for accessing PowerFlex system. If authorization is enabled, password will be ignored. 
+* systemID : PowerFlex system name or ID.	
+* endpoint :	REST API gateway HTTPS endpoint/PowerFlex Manager public IP for PowerFlex system. 
+* skipCertificateValidation :	Determines if the driver is going to validate certs while connecting to PowerFlex REST API interface. 
+* isDefault: An array having isDefault=true is for backward compatibility.  
+* mdm: mdm defines the MDM(s) that SDC should register with on start. This should be a list of MDM IP addresses or hostnames separated by comma.	true	-
+* nasName:	nasName defines what NAS should be used for NFS volumes. NFS volumes are supported on arrays version >=4.0.x	false	""
 
 ```ini
 vi config.json
