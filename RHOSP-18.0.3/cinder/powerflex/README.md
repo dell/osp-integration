@@ -151,7 +151,7 @@ vxflexos-node-vzfpm                   2/2     Running   2          31d
 [admin@rhadmin ~]$
 ```
 
-To install SDC on the compute(EDPM) nodes
+To [install SDC](https://www.dell.com/support/manuals/en-ie/scaleio/powerflex_install_upgrade_guide_4.5.x/install-the-storage-data-client-on-a-linux-based-server?guid=guid-edaac602-f18b-4fe6-b825-ee09c6cdddd1&lang=en-us) on the compute(EDPM) nodes
 
 * Get the MDM IP's from PowerFlex
 * Copy the EMC-ScaleIO-sdc-*.rpm which corresponds to your RHEL OS level version to the EDPM nodes
