@@ -1,25 +1,25 @@
-# Dell EMC PowerFlex Backend Deployment Guide for Red Hat OpenStack Platform 18.0
+# Dell EMC PowerFlex Backend Deployment Guide for Red Hat OpenStack Services on OpenShift 18.0
 
-Deployment tools for Dell EMC PowerFlex (formerly VxFlex OS/ScaleIO) support in RedHat OpenStack Platform 18.0
+Deployment tools for Dell EMC PowerFlex (formerly VxFlex OS/ScaleIO) support in Red Hat OpenStack Services on OpenShift (RHOSO) 18.0
 
 ## Overview
 
-This instruction provide detailed steps on how to enable PowerFlex.
+This instruction provides detailed steps on how to enable PowerFlex.
 
 **NOTICE**: this README represents only the **basic** steps necessary to enable PowerFlex driver. It does not contain steps other components of the system applicable to your particular installation.
 
-For more information please refer to [Product Documentation for Red Hat OpenStack Platform 18.0](https://docs.redhat.com/en/documentation/red_hat_openstack_services_on_openshift/18.0/).
+For more information please refer to [Product Documentation for Red Hat OpenStack Services on OpenShift 18.0](https://docs.redhat.com/en/documentation/red_hat_openstack_services_on_openshift/18.0/).
 
 ## Prerequisites
 
-- Red Hat OpenStack Platform 18.0 with RHEL 9.4.
+- Red Hat OpenStack Services on OpenShift 18.0 with RHEL 9.4.
 - PowerFlex 4.x cluster.
 - PowerFlex Storage Data Client (SDC) for RHEL9.4.
 
 ## Steps
 
 ### Prepare the environment for PowerFlex cinder backend
-To enable the OpenStack workloads to consume PowwerFlex as backend follow the below instructions:
+To enable the OpenStack workloads to consume PowerFlex as backend follow the below instructions:
 
 * Create a Secret CR file powerflex-secret.yaml
   
@@ -34,9 +34,9 @@ metadata:
 stringData:
   powerflex-secrets.conf: |
     [powerflex]
-    san_ip=PF_Manager_IP
-    san_login=PF_Manager_login
-    san_password=PF_Manager_password
+    san_ip=<PF_Manager_IP>
+    san_login=<PF_Manager_login>
+    san_password=<PF_Manager_password>
 type: Opaque
 ```
 
@@ -103,13 +103,13 @@ Create a config json file as follows
 vi config.json
 [
      {
-         "username": "PF_Manager_login",
-         "password": "PF_Manager_password",
-         "systemID": "SYSTEM_ID",
-         "endpoint": "PF_MGR-IP:443",
+         "username": "<PF_Manager_login>",
+         "password": "<PF_Manager_password>",
+         "systemID": "<SYSTEM_ID>",
+         "endpoint": "<PF_MGR-IP>:443",
          "insecure": true,
          "isDefault": true,
-         "mdm": "MDM_IP",
+         "mdm": "<MDM_IP>",
          "nasName": "none"
       }
  ]
@@ -121,7 +121,7 @@ Create a secret using
 oc create secret generic vxflexos-config -n vxflexos --from-file=config=./config.json
 ```
 
-From the sample available at https://github.com/dell/csm-operator/blob/main/samples/storage_csm_powerflex_v2110.yaml , create a CR file. Replace the MDM virtual IP by your environment.
+From the sample available at https://github.com/dell/csm-operator/blob/main/samples/storage_csm_powerflex_v2130.yaml , create a CR file. Replace the MDM virtual IP by your environment.
 
 ```
 vi storage_csm_powerflex_v292.yaml
@@ -161,7 +161,7 @@ To [install SDC](https://www.dell.com/support/manuals/en-ie/scaleio/powerflex_in
 
 ## Configure the connector
 
-Before using attach/detach volume operations PowerFlex connector must be properly configured. Before the daaplane is installed, on each of the EDPM nodes do the following:
+Before using attach/detach volume operations PowerFlex connector must be properly configured. Before the dataplane is installed, on each of the EDPM nodes do the following:
 
 Create `/opt/emc/scaleio/openstack/connector.conf` if it does not exist.
 
@@ -174,10 +174,10 @@ Example:
 
 ```
 [powerflex]
-san_password = powerflex_password
+san_password = <PF_Manager_password>
 
 [powerflex-new]
-san_password = powerflex_password
+san_password = <PF_Manager_password>
 ```
 
 Before the dataplane is deployed, in the `dataplane-nodeset.yaml` enter the following
@@ -204,7 +204,7 @@ metadata:
 stringData:
   connector.conf: |
     [powerflex]
-    san_password=PF_Manager_password
+    san_password=<PF_Manager_password>
 type: Opaque
 ```
 
