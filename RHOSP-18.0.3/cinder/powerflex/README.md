@@ -49,7 +49,7 @@ oc create -f powerflex-secret.yaml
 ```yaml
 oc describe secret/cinder-volume-powerflex-secrets
 ```
-For full detailed instruction of all options please refer to [PowerFlex Backend Configuration](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-powerflex-driver.html).
+For full detailed instruction of all options please refer to [PowerFlex Backend Configuration](https://docs.openstack.org/cinder/2023.1/configuration/block-storage/drivers/dell-emc-powerflex-driver.html).
 
 * Edit the existing OpenStackControlPlane CR
 ```
@@ -60,7 +60,6 @@ Modify the cinderVolumes section as follows
 ...
 cinderVolumes:
         powerflex:
-          containerImage: registry.redhat.io/rhosp-dev-preview/openstack-cinder-volume-rhel9:18.0
           customServiceConfig: |
             [powerflex]
             volume_driver = cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver
@@ -132,7 +131,7 @@ oc create secret generic vxflexos-config -n vxflexos --from-file=config=./config
 From the sample available at https://github.com/dell/csm-operator/blob/main/samples/storage_csm_powerflex_v2130.yaml , create a CR file. Replace the MDM virtual IP by your environment.
 
 ```
-vi storage_csm_powerflex_v292.yaml
+vi storage_csm_powerflex_v2130.yaml
 ... [Truncated]
     initContainers:
       - image: dellemc/sdc:4.5
@@ -145,7 +144,7 @@ vi storage_csm_powerflex_v292.yaml
 ```
 Apply the CR file to the OpenShift cluster. 
 ```
-oc create -f storage_csm_powerflex_v2110.yaml
+oc create -f storage_csm_powerflex_v2130.yaml
 ```
 
 Confirm the SDC are now running as containers on worker nodes
