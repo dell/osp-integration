@@ -254,6 +254,19 @@ sh-5.1$ openstack volume service list
 ```
 Check if a volume type 'powerflex' is created.
 ```
+sh-5.1$ openstack volume type show powerflex
++--------------------+------------------------------------------------------------+
+| Field              | Value                                                      |
++--------------------+------------------------------------------------------------+
+| access_project_ids | None                                                       |
+| description        |                                                            |
+| id                 | e00d4970-25fa-41bc-a962-261f886ddd8e                       |
+| is_public          | True                                                       |
+| name               | powerflex                                                  |
+| properties         | pool_name='PD-1:SP-SSD-1', volume_backend_name='powerflex' |
+| qos_specs_id       | None                                                       |
++--------------------+------------------------------------------------------------+
+
 sh-5.1$ openstack volume type list
 +--------------------------------------+--------------------------------+-----------+
 | ID                                   | Name                           | Is Public |
