@@ -51,11 +51,9 @@ oc describe secret/cinder-volume-powerflex-secrets
 ```
 For full detailed instruction of all options please refer to [PowerFlex Backend Configuration](https://docs.openstack.org/cinder/2023.1/configuration/block-storage/drivers/dell-emc-powerflex-driver.html).
 
-* Edit the existing OpenStackControlPlane CR
-```
-oc edit openstackcontrolplane
-```
-Modify the cinderVolumes section as follows
+* In the OpenStackControlPlane CR, esnure you have the below section
+
+Use the cinderVolumes section as follows
 ```
 ...
 cinderVolumes:
@@ -75,7 +73,11 @@ cinderVolumes:
           resources: {}
 ...
 ```
-Save and exit the file, the prompt tells you that the CR was edited. Verify the pod is running
+Save and exit the file. Apply the CR. 
+```
+oc apply -f openstackcontrolplane.yaml
+```
+Verify the pod is running
 
 ```
 oc get pods -n openstack | grep powerflex
@@ -215,7 +217,7 @@ stringData:
 type: Opaque
 ```
 
-Edit the existing OpenStackControlPlane CR and add an extraMount specification as follows
+In the OpenStackControlPlane CR and add an extraMount specification as follows
 ```
 ...  
 spec:
