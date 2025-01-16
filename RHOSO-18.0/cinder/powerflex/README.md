@@ -198,6 +198,9 @@ edpm_nova_extra_bind_mounts:
     dest: /opt/emc/scaleio/openstack/connector.conf
     options: "ro"
 ```
+```
+Note: The same powerflex-connector secret can be used with the ExtraMount so the nova-compute pod has access to the connector.conf file. This would eliminate the need to manually configure the file on the host.
+```
 
 Create PowerFlex connector secret 
 ```yaml
