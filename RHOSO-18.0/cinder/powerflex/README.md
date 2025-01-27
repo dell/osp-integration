@@ -13,6 +13,7 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 ## Prerequisites
 
 - Red Hat OpenStack Services on OpenShift 18.0 with RHEL 9.4.
+- Red Hat OpenShift 4.16
 - PowerFlex 4.x cluster.
 - PowerFlex Storage Data Client (SDC) for RHEL9.4.
 
