@@ -88,7 +88,7 @@ parameter_defaults:
    tripleo_dellemc_powermax_fc:
      CinderPowermaxStorageProtocol: 'FC'
      CinderPowermaxPortGroups: '[openstack17_FC_PG]'
-     CinderPowermaxSanIp: '1powermax_fc_SAN_IP'
+     CinderPowermaxSanIp: 'powermax_fc_SAN_IP'
      CinderPowermaxSanLogin: 'powermax_fc_SAN_username'
      CinderPowermaxSanPassword: 'powermax_fc_SAN_password'
      CinderPowermaxArray: 'Array name'
@@ -146,7 +146,7 @@ Run the following command to check whether the cinder-volume service is up.
 ... [Truncated]                               
 ```
 
-### Test the Backend
+### Testing the Configured Backend
 
 Finally, create a PowerMax volume type and test if you can successfully create and attach volumes of that type.
 
@@ -190,7 +190,7 @@ Confirm the volume was created successfully
 +--------------------------------------+------------------------+-----------+------+-------------+
 | ID                                   | Name                   | Status    | Size | Attached to |
 +--------------------------------------+------------------------+-----------+------+-------------+
-| 251d8bc8-4a67-4370-9356-929b984ea4dd | powermax_fc_volume1 | available |    1 |             |
+| 251d8bc8-4a67-4370-9356-929b984ea4dd | powermax_fc_volume1    | available |    1 |             |
 +--------------------------------------+------------------------+-----------+------+-------------+
 ```
 
