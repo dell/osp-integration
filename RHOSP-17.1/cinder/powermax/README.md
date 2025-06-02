@@ -151,6 +151,7 @@ Run the following command to check whether the cinder-volume service is up.
 Finally, create a PowerMax volume type and test if you can successfully create and attach volumes of that type.
 
 **For PowerMax iSCSI backend**
+
 Create a volume type mapped to the deployed backend.
 ```
 [stack@rhosp-undercloud ~]$ source ~/overcloudrc
@@ -173,6 +174,7 @@ Confirm the volume was created successfully
 ```
 
 **For PowerMax FC backend**
+
 Create a volume type mapped to the deployed backend.
 ```
 [stack@rhosp-undercloud ~]$ source ~/overcloudrc
