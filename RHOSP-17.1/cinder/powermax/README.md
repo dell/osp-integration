@@ -157,7 +157,7 @@ Create a volume type mapped to the deployed backend.
 [stack@rhosp-undercloud ~]$ source ~/overcloudrc
 (overcloud) [stack@rhosp-undercloud ~]$ openstack volume type create PowerMax_iSCSI
 (overcloud) [stack@rhosp-undercloud ~]$ openstack volume type set --property volume_backend_name=tripleo_dellemc_powermax_iscsi PowerMax_iSCSI
-(overcloud) [stack@rhosp-undercloud ~]$ openstack volume type set --property pool_name=Diamond+SRP_1+<array_name>
+(overcloud) [stack@rhosp-undercloud ~]$ openstack volume type set --property pool_name=Diamond+SRP_1+array123
 ```
 Create a volume using the type created above without error to ensure the availability of the backend.
 ```
@@ -180,7 +180,7 @@ Create a volume type mapped to the deployed backend.
 [stack@rhosp-undercloud ~]$ source ~/overcloudrc
 (overcloud) [stack@rhosp-undercloud ~]$ openstack volume type create PowerMax_FC
 (overcloud) [stack@rhosp-undercloud ~]$ openstack volume type set --property volume_backend_name=tripleo_dellemc_powermax_fc PowerMax_FC
-(overcloud) [stack@rhosp-undercloud ~]$ openstack volume type set --property pool_name=Diamond+SRP_1+<array_name>
+(overcloud) [stack@rhosp-undercloud ~]$ openstack volume type set --property pool_name=Diamond+SRP_1+array123
 ```
 Create a volume using the type created above without error to ensure the availability of the backend.
 ```
