@@ -18,7 +18,7 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 ## Deployment Steps
 
 ### Prepare the Environment File for PowerMax cinder backend
-The environment file is a OSP director environment file. The environment file contains the settings for each backend you want to define. Using the environment file will ensure that the backend settings persist through future Overcloud updates and upgrades.  
+The environment file is a OSP director environment file. The environment file contains the settings for each backend you want to define. Using the environment file will ensure that the backend settings persist through future overcloud updates and upgrades.  
 
 Create the environment file that will orchestrate the backend settings. Use the sample file provided below the backend reference.  
 
