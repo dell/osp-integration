@@ -2,7 +2,7 @@
 
 ## Overview
 
-This instruction provide detailed steps on how to enable PowerMax storage in Red Hat OpenStack Platform Overcloud. This assumes that the RHOSP installion is through RHOSP director toolset which is based primarily on the upstream TripleO project.
+These instructions provide detailed steps on how to enable Dell PowerMax storage in Red Hat OpenStack Platform. This assumes that the RHOSP installation is through RHOSP director toolset which is based primarily on the upstream TripleO project.
 [PowerMax iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powermax-driver.html).
 
 **NOTICE**: This README represents only the **basic** steps necessary to enable PowerMax driver. It does not contain steps on how update the overcloud or other components of the system applicable to your particular installation.
@@ -12,15 +12,15 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 ## Prerequisites
 
 - Red Hat OpenStack Platform 17.1 with RHEL 9.2.
-- Dell Powermax Storage Backend configured as storage repository.
-- Configuration settings and credentials
+- Dell PowerMax storage system properly configured and accessible as a storage backend.
+- Configuration settings and credentials for connecting RHOSP to the PowerMax storage.
 
 ## Deployment Steps
 
 ### Prepare the Environment File for PowerMax cinder backend
-The environment file is a OSP director environment file. The environment file contains the settings for each back end you want to define. Using the environment file will ensure that the back end settings persist through future Overcloud updates and upgrades.  
+The environment file is a OSP director environment file. The environment file contains the settings for each backend you want to define. Using the environment file will ensure that the backend settings persist through future Overcloud updates and upgrades.  
 
-Create the environment file that will orchestrate the back end settings. Use the sample file provided below the backend reference.  
+Create the environment file that will orchestrate the backend settings. Use the sample file provided below the backend reference.  
 
 **NOTICE**: **LVM driver** is enabled by default in TripleO, set the ```CinderEnableIscsiBackend``` to false in one of your environment file to turn it off.
 ```yaml
@@ -163,7 +163,7 @@ Create a volume using the type created above without error to ensure the availab
 ```
 (overcloud) [stack@rhosp-undercloud ~]$ openstack volume create --type PowerMax_iSCSI --size 1 powermax_iscsi_volume1
 ```
-Confirm the volume was created successfully
+Confirm the volume was created successfully.
 ```
 (overcloud) [stack@rhosp-undercloud ~]$ openstack volume list
 +--------------------------------------+------------------------+-----------+------+-------------+
@@ -186,7 +186,7 @@ Create a volume using the type created above without error to ensure the availab
 ```
 (overcloud) [stack@rhosp-undercloud ~]$ openstack volume create --type PowerMax_FC --size 1 powermax_fc_volume1
 ```
-Confirm the volume was created successfully
+Confirm the volume was created successfully.
 ```
 (overcloud) [stack@rhosp-undercloud ~]$ openstack volume list
 +--------------------------------------+------------------------+-----------+------+-------------+
