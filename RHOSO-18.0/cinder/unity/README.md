@@ -1,12 +1,10 @@
-# Dell EMC PowerFlex Backend Deployment Guide for Red Hat OpenStack Services on OpenShift 18.0
-
-Deployment tools for Dell EMC PowerFlex (formerly VxFlex OS/ScaleIO) support in Red Hat OpenStack Services on OpenShift (RHOSO) 18.0
+# Dell Unity Backend Deployment Guide for Red Hat OpenStack Services on OpenShift 18.0
 
 ## Overview
 
-This instruction provides detailed steps on how to enable PowerFlex.
+These instruction provide detailed steps on how to enable Dell Unity backend with RHOSO 18.
 
-**NOTICE**: this README represents only the **basic** steps necessary to enable PowerFlex driver. It does not contain steps other components of the system applicable to your particular installation.
+**NOTICE**: this README represents only the **basic** required steps to enable Cinder to use a Dell Unity array as a backend. It does not contain steps of other components in the system applicable to your particular installation.
 
 For more information please refer to [Product Documentation for Red Hat OpenStack Services on OpenShift 18.0](https://docs.redhat.com/en/documentation/red_hat_openstack_services_on_openshift/18.0/).
 
@@ -14,16 +12,14 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 
 - Red Hat OpenStack Services on OpenShift 18.0 with RHEL 9.4.
 - Red Hat OpenShift 4.16
-- PowerFlex 4.x cluster.
-- PowerFlex Storage Data Client (SDC) for RHEL9.4.
+- Dell Unity storage platform running supported Dell Unity OE.
 
 ## Steps
 
-### Prepare the environment for PowerFlex cinder backend
-To enable the OpenStack workloads to consume PowerFlex as backend follow the below instructions:
+### Configure Dell Unity storage details
+In this section, we'll create a secret which hold sensitive data for the Dell Unity backend that we'll configure in the next step.
 
-* Create a Secret CR file powerflex-secret.yaml
-  
+* Create a Secret CR file named **cinder-volume-unity-secrets.yaml** or choose a name that suits your needs.
 ```yaml  
 apiVersion: v1
 kind: Secret
@@ -31,259 +27,138 @@ metadata:
   labels:
     component: cinder-volume
     service: cinder
-  name: cinder-volume-powerflex-secrets
+  name: cinder-volume-unity-secrets
 stringData:
-  powerflex-secrets.conf: |
-    [powerflex]
-    san_ip=<PF_Manager_IP>
-    san_login=<PF_Manager_login>
-    san_password=<PF_Manager_password>
+  unity-secrets: |
+    [unity]
+    san_ip = <DellUnityIP>
+    san_login = <DellUnityAdminUser>
+    san_password = <DellUnityAdminPasswd>
 type: Opaque
 ```
 
-* Apply the CR file 
+* Create the secret.
+```
+oc create -f cinder-volume-unity-secrets.yaml
+secret/cinder-volume-unity-secrets created
+```
+
+* Verify the secret is created.
+```
+oc get secrets/cinder-volume-unity-secrets -o jsonpath={.data.unity-secrets} | base64 -d
+[unity]
+san_ip = <DellUnityIP>
+san_login = <DellUnityAdminUser>
+san_password = <DellUnityAdminPasswd>
+```
+For detailed instructions and supported configuration options, please refer to [Dell Unity Backend Configuration](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-unity-driver.html).
+
+### Configure Cinder to consume the Dell Unity backend
+In this section, we'll add Dell Unity configuration to the OpenStack control plane.
+
+* Edit the control plane and add the Dell Unity configuration under **spec.cinder.cinderVolumes** section.
+
+**NOTICE: Depending on your environment, you may have to choose between FC or iSCSI as the storage_protocol**
+
 ```yaml
-oc create -f powerflex-secret.yaml
-```
-
-* Verify the secret is created
-```yaml
-oc describe secret/cinder-volume-powerflex-secrets
-```
-For full detailed instruction of all options please refer to [PowerFlex Backend Configuration](https://docs.openstack.org/cinder/2023.1/configuration/block-storage/drivers/dell-emc-powerflex-driver.html).
-
-* In the OpenStackControlPlane CR, esnure you have the below section
-
-Use the cinderVolumes section as follows
-```
+oc edit openstackcontrolplanes.core.openstack.org openstack-galera-network-isolation
 ...
-cinderVolumes:
-        powerflex:
+      cinderVolumes:
+        unity:
           customServiceConfig: |
-            [powerflex]
-            volume_driver = cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver
-            volume_backend_name = powerflex
-            powerflex_storage_pools = Domain1:Pool1,Domain2:Pool2
+            [unity]
+            volume_backend_name = unity
+            volume_driver   = cinder.volume.drivers.dell_emc.unity.Driver
+            storage_protocol = iSCSI
+            image_volume_cache_enabled  = true
+            use_multipath_for_image_xfer = true
+            suppress_requests_ssl_warnings = True
           customServiceConfigSecrets:
-          - cinder-volume-powerflex-secrets
-          debug:
-            service: false
+          - cinder-volume-unity-secrets
           networkAttachments:
           - storage
           replicas: 1
           resources: {}
 ...
 ```
-Save and exit the file. Apply the CR. 
-```
-oc apply -f openstackcontrolplane.yaml
-```
-Verify the pod is running
+### Alter the container image used by cinder-volume
+**NOTICE: Because Dell Unity has a library dependency named storops, this section describes how to specify a custom container image when running cinder-volume.**
 
-```
-oc get pods -n openstack | grep powerflex
-
-[admin@rhadmin ~]$ oc get pods -n openstack | grep powerflex
-cinder-volume-powerflex-0                                       2/2     Running     0             4d
-[admin@rhadmin ~]$
-
-```
-
-### Prepare custom volume mappings for connector configuration 
-
-PowerFlex SDC needs to be installed on the following nodes:
-* Controller nodes 
-* Compute nodes
-
-To install SDC on the controller nodes, deploy the Dell Container Storage Module operator. From the OpenShift operator hub, search Dell Container Storage modeules and pick the certified operator. Follow the wizard with all the deault values and install the operator. 
-
-Follow the documentation located here https://dell.github.io/csm-docs/docs/deployment/csmoperator/drivers/powerflex/ to install a PowerFlex CSI driver for the remaining steps.
-
-Create a config json file as follows
-* username : Username for accessing PowerFlex system. If authorization is enabled, username will be ignored.
-* password : Password for accessing PowerFlex system. If authorization is enabled, password will be ignored. 
-* systemID : PowerFlex system name or ID.	
-* endpoint :	REST API gateway HTTPS endpoint/PowerFlex Manager public IP for PowerFlex system. 
-* skipCertificateValidation :	Determines if the driver is going to validate certs while connecting to PowerFlex REST API interface. 
-* isDefault: An array having isDefault=true is for backward compatibility.  
-* mdm: mdm defines the MDM(s) that SDC should register with on start. This should be a list of MDM IP addresses or hostnames separated by comma.	
-* nasName:	nasName defines what NAS should be used for NFS volumes. NFS volumes are supported on arrays version >=4.0.x	
-
-```ini
-vi config.json
-[
-     {
-         "username": "<PF_Manager_login>",
-         "password": "<PF_Manager_password>",
-         "systemID": "<SYSTEM_ID>",
-         "endpoint": "<PF_MGR-IP>:443",
-         "insecure": true,
-         "isDefault": true,
-         "mdm": "<MDM_IP>",
-         "nasName": "none"
-      }
- ]
-```
-
-Create a secret using
-
-```
-oc create secret generic vxflexos-config -n vxflexos --from-file=config=./config.json
-```
-
-From the sample available at https://github.com/dell/csm-operator/blob/main/samples/storage_csm_powerflex_v2130.yaml , create a CR file. Replace the MDM virtual IP by your environment.
-
-```
-vi storage_csm_powerflex_v2130.yaml
-... [Truncated]
-    initContainers:
-      - image: dellemc/sdc:4.5
-        imagePullPolicy: IfNotPresent
-        name: sdc
-        envs:
-          - name: MDM
-            value: "MDM_IP"
-... [Truncated]
-```
-Apply the CR file to the OpenShift cluster. 
-```
-oc create -f storage_csm_powerflex_v2130.yaml
-```
-
-Confirm the SDC are now running as containers on worker nodes
-```
-[admin@rhadmin ~]$ oc get pods -n vxflexos
-NAME                                  READY   STATUS    RESTARTS   AGE
-vxflexos-controller-cb9855d69-7p9d4   5/5     Running   0          31d
-vxflexos-node-9f69t                   2/2     Running   2          31d
-vxflexos-node-kgrkd                   2/2     Running   2          31d
-vxflexos-node-vzfpm                   2/2     Running   2          31d
-[admin@rhadmin ~]$
-```
-
-To [install SDC](https://www.dell.com/support/manuals/en-ie/scaleio/powerflex_install_upgrade_guide_4.5.x/install-the-storage-data-client-on-a-linux-based-server?guid=guid-edaac602-f18b-4fe6-b825-ee09c6cdddd1&lang=en-us) on the compute(EDPM) nodes
-
-* Get the MDM IP's from PowerFlex
-* Copy the EMC-ScaleIO-sdc-*.rpm which corresponds to your RHEL OS level version to the EDPM nodes
-* Install the RPM as the root user
-* Repeat the steps for every remaining EDPM node
-* Confirm the SDC is connected to the PowerFlex system by logging on to PowerFlex Manager, navigate to Block → Hosts 
-
-## Configure the connector
-
-Before using attach/detach volume operations PowerFlex connector must be properly configured. Before the dataplane is installed, on each of the EDPM nodes do the following:
-
-Create `/opt/emc/scaleio/openstack/connector.conf` if it does not exist.
-
-```bash
-$ touch /opt/emc/scaleio/openstack/connector.conf
-```
-Edit the `/opt/emc/scaleio/openstack/connector.conf` and populate it with passwords.
-
-Example:
-
-```
-[powerflex]
-san_password = <PF_Manager_password>
-
-[powerflex-new]
-san_password = <PF_Manager_password>
-```
-
-Before the dataplane is deployed, in the `dataplane-nodeset.yaml` enter the following
-```
-edpm_network_config_template: |
-...
-edpm_nova_extra_bind_mounts:
-  - src: /opt/emc/scaleio/openstack/connector.conf
-    dest: /opt/emc/scaleio/openstack/connector.conf
-    options: "ro"
-```
-```
-Note: The same powerflex-connector secret can be used with the ExtraMount so the nova-compute pod has access to the connector.conf file. This would eliminate the need to manually configure the file on the host.
-```
-
-Create PowerFlex connector secret 
+* Edit the current control plane configuration and specify the container image name in the **spec.customContainerImages.cinderVolumeImages** section.
 ```yaml
-vi powerflex-connector-secret.yaml
-
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    component: cinder-volume
-    service: cinder
-  name: powerflex-connector-conf-files
-stringData:
-  connector.conf: |
-    [powerflex]
-    san_password=<PF_Manager_password>
-type: Opaque
-```
-
-In the OpenStackControlPlane CR and add an extraMount specification as follows
-```
-...  
+oc edit openstackversions.core.openstack.org openstack-galera-network-isolation
+...
 spec:
-  extraMounts:
-  - extraVol:
-    - extraVolType: powerflex
-      mounts:
-      - mountPath: /opt/emc/scaleio/openstack
-        name: powerflex-connector
-        readOnly: true
-      propagation:
-      - CinderVolume
-      volumes:
-      - name: powerflex-connector
-        secret:
-          secretName: powerflex-connector-conf-files
-    name: v1
-    region: r1
- ...
+  customContainerImages:
+    cinderVolumeImages:
+      unity: quay.io/jproque-dell/openstack-cinder-volume-dellemc-unity:latest
+  targetVersion: 18.0.6-20250403.1
+...
+```
+
+* Confirm the pod is running and uses the custom container image provided in the previous section.
+```
+oc get pods/cinder-volume-unity-0 -o jsonpath='{.spec.containers[0].image}{"\n"}'
+quay.io/jproque-dell/openstack-cinder-volume-dellemc-unity:latest
 ```
 
 ### Test the configured Backend
-Finally, create a PowerFlex volume type and test if you can successfully create and attach volumes of that type.
+In this section, we'll validate the cinder configuration by following the steps below:
+* Make sure the cinder-volume service is up and running.
+* Create a specific volume type which will be used by Cinder.
+* Create a volume on the Dell Unity using that volume type.
 
-Run the following command to check whether the cinder-volume service is up. 
+* Open a session on the **openstackclient** pod.
+```
+oc rsh openstackclient
+```
+
+* Confirm the cinder-volume using Dell Unity as a backend is up and running
 ```
 [admin@rhadmin ~]$ oc rsh openstackclient
 sh-5.1$ openstack volume service list
 +------------------+-------------------------------------+------+---------+-------+----------------------------+
 | Binary           | Host                                | Zone | Status  | State | Updated At                 |
 +------------------+-------------------------------------+------+---------+-------+----------------------------+
-| cinder-scheduler | cinder-scheduler-0                  | nova | enabled | up    | 2024-12-16T09:24:50.000000 |
-| cinder-volume    | cinder-volume-powerflex-0@powerflex | nova | enabled | up    | 2024-12-16T09:24:58.000000 |
-| cinder-backup    | cinder-backup-0                     | nova | enabled | up    | 2024-12-16T09:24:49.000000 |
+| cinder-scheduler | cinder-scheduler-0                  | nova | enabled | up    | 2025-06-04T12:30:32.000000 |
+| cinder-volume    | cinder-volume-unity-0@unity         | nova | enabled | up    | 2025-05-21T10:17:11.000000 |
+| cinder-backup    | cinder-backup-0                     | nova | enabled | up    | 2025-06-04T12:30:34.000000 |
 +------------------+-------------------------------------+------+---------+-------+----------------------------+
 ```
-Check if a volume type 'powerflex' is created.
+
+* Create a volume type named unity and map it to the Dell Unity backend.
 ```
-sh-5.1$ openstack volume type show powerflex
+sh-5.1$ openstack volume type create --property volume_backend_name=unity unity
++-------------+--------------------------------------+
+| Field       | Value                                |
++-------------+--------------------------------------+
+| description | None                                 |
+| id          | 5dfa8b77-3445-4a33-b14f-186fe1a00c51 |
+| is_public   | True                                 |
+| name        | unity                                |
+| properties  | volume_backend_name='unity'          |
++-------------+--------------------------------------+
+```
+
+* Confirm the volume type exists and is successfully configured.
+```
+sh-5.1$ openstack volume type show unity
 +--------------------+------------------------------------------------------------+
 | Field              | Value                                                      |
 +--------------------+------------------------------------------------------------+
 | access_project_ids | None                                                       |
 | description        |                                                            |
-| id                 | e00d4970-25fa-41bc-a962-261f886ddd8e                       |
+| id                 | 5dfa8b77-3445-4a33-b14f-186fe1a00c51                       |
 | is_public          | True                                                       |
-| name               | powerflex                                                  |
-| properties         | pool_name='PD-1:SP-SSD-1', volume_backend_name='powerflex' |
+| name               | unity                                                      |
+| properties         | volume_backend_name='unity'                                |
 | qos_specs_id       | None                                                       |
 +--------------------+------------------------------------------------------------+
-
-sh-5.1$ openstack volume type list
-+--------------------------------------+--------------------------------+-----------+
-| ID                                   | Name                           | Is Public |
-+--------------------------------------+--------------------------------+-----------+
-| e8a9dcd6-e063-43ea-8132-e6e5e801530e | powerflex                      | True      |
-
 ```
 
 Create a volume using the type created above without error to ensure the availability of the backend.
 ```
-sh-5.1$ openstack volume create --type powerflex --size 8 pf_vol1
+sh-5.1$ openstack volume create --type unity --size 1 volunity
 +---------------------+--------------------------------------+
 | Field               | Value                                |
 +---------------------+--------------------------------------+
@@ -291,31 +166,31 @@ sh-5.1$ openstack volume create --type powerflex --size 8 pf_vol1
 | availability_zone   | nova                                 |
 | bootable            | false                                |
 | consistencygroup_id | None                                 |
-| created_at          | 2024-12-17T04:52:49.774884           |
+| created_at          | 2025-06-04T12:37:32.981447           |
 | description         | None                                 |
 | encrypted           | False                                |
-| id                  | 68645dfc-b946-4d76-9875-195095c0e9ec |
+| id                  | f026a707-544c-4c97-ac65-e340f816894e |
 | migration_status    | None                                 |
 | multiattach         | False                                |
-| name                | pf_vol1                              |
+| name                | volunity                             |
 | properties          |                                      |
 | replication_status  | None                                 |
-| size                | 8                                    |
+| size                | 1                                    |
 | snapshot_id         | None                                 |
 | source_volid        | None                                 |
 | status              | creating                             |
-| type                | powerflex                            |
+| type                | unity                                |
 | updated_at          | None                                 |
-| user_id             | 3bbbbe7f703b4c75a8d3030b7ed43d84     |
+| user_id             | 1ce9b1415f13480bb951bc470062d5d0     |
 +---------------------+--------------------------------------+
-
 ```
+
 Confirm the volume was created successfully
 ```
 sh-5.1$ openstack volume list
-+--------------------------------------+---------+--------+------+-----------------+
-| ID                                   | Name    | Status     | Size | Attached to |
-+--------------------------------------+---------+--------+------+-----------------+
-| 68645dfc-b946-4d76-9875-195095c0e9ec | pf_vol1 | available  | 8    |             |
-+--------------------------------------+---------+--------+------+-----------------+
++--------------------------------------+----------+-----------+------+-------------+
+| ID                                   | Name     | Status    | Size | Attached to |
++--------------------------------------+----------+-----------+------+-------------+
+| f026a707-544c-4c97-ac65-e340f816894e | volunity | available |    1 |             |
++--------------------------------------+----------+-----------+------+-------------+
 ```
