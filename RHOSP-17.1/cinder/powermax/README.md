@@ -146,7 +146,7 @@ Run the following command to check whether the cinder-volume service is up.
 ... [Truncated]                               
 ```
 
-### Testing the Configured Backend
+### Testing the configured Backend
 
 Finally, create a PowerMax volume type and test if you can successfully create and attach volumes of that type.
 
