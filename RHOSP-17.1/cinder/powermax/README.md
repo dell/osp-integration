@@ -61,7 +61,7 @@ Deploy the backend configuration by running the openstack overcloud deploy comma
 ```bash
 (undercloud) $ openstack overcloud deploy --templates \
 -e /home/stack/templates/overcloud_images.yaml \
--e /usr/share/openstack-tripleo-heat-templates/cinder-dellemc-powermax-config.yaml
+-e /usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-powermax-config.yaml
 -e <other templates>
 .....
 -e /home/stack/templates/custom-dellemc-powermax-config.yaml
