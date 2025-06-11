@@ -1,4 +1,4 @@
-# Dell PowerMax Backend Deployment Guide for Red Hat OpenStack Platform 17.1.6
+# Dell PowerMax Backend Deployment Guide for Red Hat OpenStack Platform 17.1
 
 ## Overview
 
@@ -11,7 +11,7 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 
 ## Prerequisites
 
-- Red Hat OpenStack Platform 17.1.6 with RHEL 9.2.
+- Red Hat OpenStack Platform 17.1 with RHEL 9.2.
 - Dell PowerMax storage system properly configured and accessible as a storage backend.
 - Configuration settings and credentials for connecting RHOSP to the PowerMax storage.
 
