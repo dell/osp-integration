@@ -5,7 +5,7 @@
 These instructions provide detailed steps on how to enable Dell PowerMax storage in Red Hat OpenStack Platform. This assumes that the RHOSP installation is through RHOSP director toolset which is based primarily on the upstream TripleO project.
 [PowerMax iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powermax-driver.html).
 
-**NOTICE**: This README represents only the **basic** steps necessary to enable PowerMax driver. It does not contain steps on how update the overcloud or other components of the system applicable to your particular installation.
+**NOTICE**: This README represents only the **basic** steps necessary to enable Dell PowerMax driver. It does not contain steps on how update the overcloud or other components of the system applicable to your particular installation.
 
 For more information please refer to [Product Documentation for Red Hat OpenStack Platform 17.1](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/17.1/).
 
@@ -61,7 +61,7 @@ Deploy the backend configuration by running the openstack overcloud deploy comma
 ```bash
 (undercloud) $ openstack overcloud deploy --templates \
 -e /home/stack/templates/overcloud_images.yaml \
--e /usr/share/openstack-tripleo-heat-templates/cinder-dellemc-powermax-config.yaml
+-e /usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-powermax-config.yaml
 -e <other templates>
 .....
 -e /home/stack/templates/custom-dellemc-powermax-config.yaml
@@ -196,7 +196,7 @@ Confirm the volume was created successfully.
 +--------------------------------------+------------------------+-----------+------+-------------+
 ```
 
-**NOTE**: You can repeat the above operations for each backend that you have configured in case you are using multi-backends setup with different storage backends.
+**NOTE**: You can repeat the above operations for each backend that you have configured in case you are using multi-backends setup.
 
 **References**
 [Red Hat OpenStack Platform Overcloud Deploying Custom Block Storage Backend](https://docs.redhat.com/en/documentation/red_hat_openstack_platform/17.1/html/deploying_a_custom_block_storage_back_end/index).
