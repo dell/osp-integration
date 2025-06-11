@@ -196,7 +196,7 @@ Confirm the volume was created successfully.
 +--------------------------------------+------------------------+-----------+------+-------------+
 ```
 
-**NOTE**: You can repeat the above operations for each backend that you have configured in case you are using multi-backends setup
+**NOTE**: You can repeat the above operations for each backend that you have configured in case you are using multi-backends setup.
 
 **References**
 [Red Hat OpenStack Platform Overcloud Deploying Custom Block Storage Backend](https://docs.redhat.com/en/documentation/red_hat_openstack_platform/17.1/html/deploying_a_custom_block_storage_back_end/index).
