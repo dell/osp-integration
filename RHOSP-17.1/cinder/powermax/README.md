@@ -31,7 +31,7 @@ parameter_defaults:
 For full detailed instruction of options please refer to [PowerMax Backend Configuration](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powermax-driver.html#configuration-options).
 
 **Environment sample**
-With a director deployment, PowerMax backend can be deployed using the integrated heat environment file. This file is located in the following path of the Undercloud node:
+With a director deployment, PowerMax backend can be deployed using the integrated heat environment file. This file is located in the following path of the undercloud node:
 `/usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-powermax-config.yaml`.
 
 Create the `custom-dellemc-powermax-config.yaml` file in your `~/templates/` directory. Open the file and edit with your favorite editor to fit your environment. The following shows sample content of the file. The files will list optional parameters that the user can choose to override if they don't need the default value.
@@ -52,7 +52,7 @@ parameter_defaults:
   CinderPowermaxStorageProtocol: 'iSCSI/FC'
 ```
 
-**NOTE**: All other values will be inherited from `/usr/share/openstack-tripleo-heat-templates/cinder-dellemc-powerflex-config.yaml`, including the resource_registry entry.
+**NOTE**: All other values will be inherited from `/usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-powerflex-config.yaml`, including the resource_registry entry.
 
 ### Deploy the configured backend
 
