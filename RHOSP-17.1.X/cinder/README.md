@@ -119,7 +119,7 @@ parameter_defaults:
 ```
 
 Multiple backends can be configured at a time during deployment. Add the appropriate templates and environment file to the the `overcloud deploy` command above if necessary.
-###Nilesh test 
+
 ### Verify the configured changes
 When the director completes the overcloud deployment, edit the `/var/lib/containers/cinder/etc/cinder/cinder.conf` file with your favorite editor and verify that the powerstore backend has been configured correctly. 
 Depending on your environment, it may differ from the output below:
