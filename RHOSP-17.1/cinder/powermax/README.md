@@ -5,7 +5,11 @@
 These instructions provide detailed steps on how to enable Dell PowerMax storage in Red Hat OpenStack Platform. This assumes that the RHOSP installation is through RHOSP director toolset which is based primarily on the upstream TripleO project.
 [PowerMax iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powermax-driver.html).
 
-**NOTICE**: This README represents only the **basic** steps necessary to enable PowerMax driver. It does not contain steps on how update the overcloud or other components of the system applicable to your particular installation.
+**NOTE**:
+Dell PowerMax v3 is certified with Red Hat OpenStack Platform  17.1.6 z release.
+Dell PowerMax v4 is certified with Red Hat OpenStack Platform  17.1.9 z release.
+
+**NOTICE**: This README represents only the **basic** steps necessary to enable Dell PowerMax driver. It does not contain steps on how update the overcloud or other components of the system applicable to your particular installation.
 
 For more information please refer to [Product Documentation for Red Hat OpenStack Platform 17.1](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/17.1/).
 
@@ -31,7 +35,7 @@ parameter_defaults:
 For full detailed instruction of options please refer to [PowerMax Backend Configuration](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powermax-driver.html#configuration-options).
 
 **Environment sample**
-With a director deployment, PowerMax backend can be deployed using the integrated heat environment file. This file is located in the following path of the Undercloud node:
+With a director deployment, PowerMax backend can be deployed using the integrated heat environment file. This file is located in the following path of the undercloud node:
 `/usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-powermax-config.yaml`.
 
 Create the `custom-dellemc-powermax-config.yaml` file in your `~/templates/` directory. Open the file and edit with your favorite editor to fit your environment. The following shows sample content of the file. The files will list optional parameters that the user can choose to override if they don't need the default value.
@@ -52,7 +56,7 @@ parameter_defaults:
   CinderPowermaxStorageProtocol: 'iSCSI/FC'
 ```
 
-**NOTE**: All other values will be inherited from `/usr/share/openstack-tripleo-heat-templates/cinder-dellemc-powerflex-config.yaml`, including the resource_registry entry.
+**NOTE**: All other values will be inherited from `/usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-powerflex-config.yaml`, including the resource_registry entry.
 
 ### Deploy the configured backend
 
@@ -61,7 +65,7 @@ Deploy the backend configuration by running the openstack overcloud deploy comma
 ```bash
 (undercloud) $ openstack overcloud deploy --templates \
 -e /home/stack/templates/overcloud_images.yaml \
--e /usr/share/openstack-tripleo-heat-templates/cinder-dellemc-powermax-config.yaml
+-e /usr/share/openstack-tripleo-heat-templates/environments/cinder-dellemc-powermax-config.yaml
 -e <other templates>
 .....
 -e /home/stack/templates/custom-dellemc-powermax-config.yaml
@@ -100,7 +104,7 @@ Multiple backends can be configured at a time during deployment. Add the appropr
 
 ### Verify configured backend
 
-After the deployment finishes successfully, open the /var/lib/config-data/puppet-generated/cinder/etc/cinder/cinder.conf file with your favorite editor and verify that the powermax backend has been configured correctly. Depending on your environment, it may differ from the output below:
+After the deployment finishes successfully, open the /var/lib/config-data/puppet-generated/cinder/etc/cinder/cinder.conf file with your favorite editor and verify that the PowerMax backend has been configured correctly. Depending on your environment, it may differ from the output below:
 
 ```ini
 [DEFAULT]
@@ -196,7 +200,7 @@ Confirm the volume was created successfully.
 +--------------------------------------+------------------------+-----------+------+-------------+
 ```
 
-**NOTE**: You can repeat the above operations for each backend that you have configured in case you are using multi-backends setup with different storage backends.
+**NOTE**: You can repeat the above operations for each backend that you have configured in case you are using multi-backends setup.
 
 **References**
 [Red Hat OpenStack Platform Overcloud Deploying Custom Block Storage Backend](https://docs.redhat.com/en/documentation/red_hat_openstack_platform/17.1/html/deploying_a_custom_block_storage_back_end/index).
