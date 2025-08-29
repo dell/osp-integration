@@ -1,9 +1,13 @@
-# Dell PowerMax Backend Deployment Guide for Red Hat OpenStack Platform 17.1.6
+# Dell PowerMax Backend Deployment Guide for Red Hat OpenStack Platform 17.1
 
 ## Overview
 
 These instructions provide detailed steps on how to enable Dell PowerMax storage in Red Hat OpenStack Platform. This assumes that the RHOSP installation is through RHOSP director toolset which is based primarily on the upstream TripleO project.
 [PowerMax iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powermax-driver.html).
+
+**NOTE**:
+Dell PowerMax v3 is certified with Red Hat OpenStack Platform  17.1.6 z release.
+Dell PowerMax v4 is certified with Red Hat OpenStack Platform  17.1.9 z release.
 
 **NOTICE**: This README represents only the **basic** steps necessary to enable Dell PowerMax driver. It does not contain steps on how update the overcloud or other components of the system applicable to your particular installation.
 
@@ -11,7 +15,7 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 
 ## Prerequisites
 
-- Red Hat OpenStack Platform 17.1.6 with RHEL 9.2.
+- Red Hat OpenStack Platform 17.1 with RHEL 9.2.
 - Dell PowerMax storage system properly configured and accessible as a storage backend.
 - Configuration settings and credentials for connecting RHOSP to the PowerMax storage.
 
@@ -100,7 +104,7 @@ Multiple backends can be configured at a time during deployment. Add the appropr
 
 ### Verify configured backend
 
-After the deployment finishes successfully, open the /var/lib/config-data/puppet-generated/cinder/etc/cinder/cinder.conf file with your favorite editor and verify that the powermax backend has been configured correctly. Depending on your environment, it may differ from the output below:
+After the deployment finishes successfully, open the /var/lib/config-data/puppet-generated/cinder/etc/cinder/cinder.conf file with your favorite editor and verify that the PowerMax backend has been configured correctly. Depending on your environment, it may differ from the output below:
 
 ```ini
 [DEFAULT]
