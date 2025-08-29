@@ -6,8 +6,8 @@ These instructions provide detailed steps on how to enable Dell PowerMax storage
 [PowerMax iSCSI and FC drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powermax-driver.html).
 
 **NOTE**:
-Dell PowerMax v3 is certified with Red Hat OpenStack Platform  17.1.6 z release.
-Dell PowerMax v4 is certified with Red Hat OpenStack Platform  17.1.9 z release.
+- Dell PowerMax v3 is certified with Red Hat OpenStack Platform  17.1.6 z release.
+- Dell PowerMax v4 is certified with Red Hat OpenStack Platform  17.1.9 z release.
 
 **NOTICE**: This README represents only the **basic** steps necessary to enable Dell PowerMax driver. It does not contain steps on how update the overcloud or other components of the system applicable to your particular installation.
 
