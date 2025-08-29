@@ -1,16 +1,17 @@
 
-# Dell EMC Cinder Backend Deployment Guide for Red Hat OpenStack Platform 17
+# Dell Cinder Backend Deployment Guide for Red Hat OpenStack Platform 17
 
 ## Overview
 
-This document describes how to deploy the Dell EMC Block Storage services in a Red Hat OpenStack Platform Overcloud.
+This document describes how to deploy the Dell Block Storage services in a Red Hat OpenStack Platform Overcloud.
 This assumes that the RHOSP installation is done through RHOSP director toolset which is based primarily on the upstream TripleO project.  
 
 
 
-The following Dell EMC storage drivers are fully integrated with director and can be deployed using tripleo heat templates 
+The following Dell storage drivers are fully integrated with director and can be deployed using tripleo heat templates 
 * [Unity iSCSI and FC drivers](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-unity-driver.html) - Please refer to this [custom deployment guide for the Unity Driver](https://github.com/emc-openstack/osp-deploy/tree/rhosp17.1/cinder)
-* [PowerFlex drivers](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-powerflex-driver.html) - Please refer to this [Guide for the PowerFlex driver](https://github.com/dell/osp-integration/tree/master/RHOSP-17.1/cinder/powerflex/README.md) 
+* [PowerFlex drivers](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-powerflex-driver.html) - Please refer to this [Guide for the PowerFlex driver](https://github.com/dell/osp-integration/tree/master/RHOSP-17.1/cinder/powerflex/README.md)
+* [PowerMax drivers](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powermax-driver.html) - Please refer to this [Guide for the PowerMax driver](https://github.com/dell/osp-integration/blob/master/RHOSP-17.1.X/cinder/powermax/README.md)
 * [PowerStore iSCSI and FC drivers](https://docs.openstack.org/cinder/wallaby/configuration/block-storage/drivers/dell-emc-powerstore-driver.html) - see below
 
 **Note:** The following drivers are no longer certified with RHOSP 17.1 and will be deprecated starting from 2023.1 Antelope release of OpenStack.
@@ -18,10 +19,8 @@ The following Dell EMC storage drivers are fully integrated with director and ca
 * SC Series FC and iSCSI drivers
 * VNX iSCSI and FC drivers
 
-**Note:** The PowerMax iSCSI and FC drivers are not yet certified with Red Hat for RHOSP 17.1 and therefore are intentionally not mentioned in this guide
-
 ## Prerequisites
-- Dell EMC Storage Backend configured as storage repository.
+- Dell Storage Backend configured as storage repository.
 - Configuration settings and credentials.
 
 ## Deployment Steps
@@ -120,7 +119,7 @@ parameter_defaults:
 ```
 
 Multiple backends can be configured at a time during deployment. Add the appropriate templates and environment file to the the `overcloud deploy` command above if necessary.
- 
+
 ### Verify the configured changes
 When the director completes the overcloud deployment, edit the `/var/lib/containers/cinder/etc/cinder/cinder.conf` file with your favorite editor and verify that the powerstore backend has been configured correctly. 
 Depending on your environment, it may differ from the output below:
