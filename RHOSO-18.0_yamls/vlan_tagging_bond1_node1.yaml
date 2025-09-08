@@ -1,0 +1,131 @@
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: ocpnode1-bond1-vlans
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: "ocpnode1.rhoso.com"
+  desiredState:
+    interfaces:
+      - name: bond1.200
+        description: PowerFlex Data 1 VLAN200 using bond1
+        type: vlan
+        state: up
+        ipv4:
+          address:
+            - ip: 172.16.200.20
+              prefix-length: 24
+          enabled: true
+        vlan:
+          base-iface: bond1
+          id: 200
+      - name: bond1.210
+        description: PowerFlex Data 2 VLAN210 using bond1
+        type: vlan
+        state: up
+        ipv4:
+          address:
+            - ip: 172.16.210.20
+              prefix-length: 24
+          enabled: true
+        vlan:
+          base-iface: bond1
+          id: 210
+      - name: bond1.160
+        description: internalapi vlan interface  VLAN160 using bond1
+        type: vlan
+        state: up
+        ipv4:
+          address:
+            - ip: 172.17.160.20
+              prefix-length: 24
+          enabled: true
+        vlan:
+          base-iface: bond1
+          id: 160
+      - name: bond1.161
+        description: storage vlan interface VLAN161  using bond1
+        type: vlan
+        state: up
+        ipv4:
+          address:
+            - ip: 172.17.161.20
+              prefix-length: 24
+          enabled: true
+        vlan:
+          base-iface: bond1
+          id: 161
+      - name: bond1.162
+        description: tenant vlan interfac on VLAN162 using bond1
+        type: vlan
+        state: up
+        ipv4:
+          address:
+            - ip: 172.17.162.20
+              prefix-length: 24
+          enabled: true
+        vlan:
+          base-iface: bond1
+          id: 162
+      - name: bond1.163
+        description: ctlplane vlan interfac on VLAN163 using bond1
+        type: vlan
+        state: up
+        ipv4:
+          address:
+            - ip: 172.17.163.20
+              prefix-length: 24
+          enabled: true
+        vlan:
+          base-iface: bond1
+          id: 163
+      - name: bond1.165
+        description: external vlan interfac on VLAN165 using bond1
+        type: vlan
+        state: up
+        ipv4:
+          address:
+            - ip: 172.17.165.20
+              prefix-length: 24
+          enabled: true
+        vlan:
+          base-iface: bond1
+          id: 165
+      - name: bond1.166
+        description: ovnController vlan interfac on VLAN166 using bond1
+        type: vlan
+        state: up
+        ipv4:
+          address:
+            - ip: 172.17.166.20
+              prefix-length: 24
+          enabled: true
+        vlan:
+          base-iface: bond1
+          id: 166
+      - name: bond1.2100
+        description: pmax pstore vlan interfac on VLAN2100 using bond1
+        type: vlan
+        state: up
+        ipv4:
+          address:
+            - ip: 172.16.100.243
+              prefix-length: 22
+          enabled: true
+        vlan:
+          base-iface: bond1
+          id: 2100
+      - name: bond1.2200
+        description: pmax pstore vlan interfac on VLAN2200 using bond1
+        type: vlan
+        state: up
+        ipv4:
+          address:
+            - ip: 172.16.200.243
+              prefix-length: 22
+          enabled: true
+        vlan:
+          base-iface: bond1
+          id: 2200
+
+

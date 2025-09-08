@@ -1,0 +1,448 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: glance-glance-default-external-api-0
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/glance-glance-default-external-api-0
+  claimRef:
+    namespace: openstack
+    name: glance-glance-default-external-api-0
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: glance-glance-default-internal-api-0
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/glance-glance-default-internal-api-0
+  claimRef:
+    namespace: openstack
+    name: glance-glance-default-internal-api-0
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: mysql-db-openstack-cell1-galera-0
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  mountOptions:
+    - nolock
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/mysql-db-openstack-cell1-galera-0
+  claimRef:
+    namespace: openstack
+    name: mysql-db-openstack-cell1-galera-0
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: mysql-db-openstack-cell1-galera-1
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  mountOptions:
+    - nolock
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/mysql-db-openstack-cell1-galera-1
+  claimRef:
+    namespace: openstack
+    name: mysql-db-openstack-cell1-galera-1
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: mysql-db-openstack-cell1-galera-2
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  mountOptions:
+    - nolock
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/mysql-db-openstack-cell1-galera-2
+  claimRef:
+    namespace: openstack
+    name: mysql-db-openstack-cell1-galera-2
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: mysql-db-openstack-galera-0
+spec:
+  capacity:
+    storage: 10Gi
+  mountOptions:
+    - nolock
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/mysql-db-openstack-galera-0
+  claimRef:
+    namespace: openstack
+    name: mysql-db-openstack-galera-0
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: mysql-db-openstack-galera-1
+spec:
+  capacity:
+    storage: 10Gi
+  mountOptions:
+    - nolock
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/mysql-db-openstack-galera-1
+  claimRef:
+    namespace: openstack
+    name: mysql-db-openstack-galera-1
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: mysql-db-openstack-galera-2
+spec:
+  capacity:
+    storage: 10Gi
+  mountOptions:
+    - nolock
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/mysql-db-openstack-galera-2
+  claimRef:
+    namespace: openstack
+    name: mysql-db-openstack-galera-2
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ovndbcluster-nb-etc-ovn-ovsdbserver-nb-0
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/ovndbcluster-nb-etc-ovn-ovsdbserver-nb-0
+  claimRef:
+    namespace: openstack
+    name: ovndbcluster-nb-etc-ovn-ovsdbserver-nb-0
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ovndbcluster-nb-etc-ovn-ovsdbserver-nb-1
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/ovndbcluster-nb-etc-ovn-ovsdbserver-nb-1
+  claimRef:
+    namespace: openstack
+    name: ovndbcluster-nb-etc-ovn-ovsdbserver-nb-1
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ovndbcluster-nb-etc-ovn-ovsdbserver-nb-2
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/ovndbcluster-nb-etc-ovn-ovsdbserver-nb-2
+  claimRef:
+    namespace: openstack
+    name: ovndbcluster-nb-etc-ovn-ovsdbserver-nb-2
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ovndbcluster-sb-etc-ovn-ovsdbserver-sb-0
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/ovndbcluster-sb-etc-ovn-ovsdbserver-sb-0
+  claimRef:
+    namespace: openstack
+    name: ovndbcluster-sb-etc-ovn-ovsdbserver-sb-0
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ovndbcluster-sb-etc-ovn-ovsdbserver-sb-1
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/ovndbcluster-sb-etc-ovn-ovsdbserver-sb-1
+  claimRef:
+    namespace: openstack
+    name: ovndbcluster-sb-etc-ovn-ovsdbserver-sb-1
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ovndbcluster-sb-etc-ovn-ovsdbserver-sb-2
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/ovndbcluster-sb-etc-ovn-ovsdbserver-sb-2
+  claimRef:
+    namespace: openstack
+    name: ovndbcluster-sb-etc-ovn-ovsdbserver-sb-2
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: persistence-rabbitmq-cell1-server-0
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/persistence-rabbitmq-cell1-server-0
+  claimRef:
+    namespace: openstack
+    name: persistence-rabbitmq-cell1-server-0
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: persistence-rabbitmq-cell1-server-1
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/persistence-rabbitmq-cell1-server-1
+  claimRef:
+    namespace: openstack
+    name: persistence-rabbitmq-cell1-server-1
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: persistence-rabbitmq-cell1-server-2
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/persistence-rabbitmq-cell1-server-2
+  claimRef:
+    namespace: openstack
+    name: persistence-rabbitmq-cell1-server-2
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: persistence-rabbitmq-server-0
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/persistence-rabbitmq-server-0
+  claimRef:
+    namespace: openstack
+    name: persistence-rabbitmq-server-0
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: persistence-rabbitmq-server-1
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/persistence-rabbitmq-server-1
+  claimRef:
+    namespace: openstack
+    name: persistence-rabbitmq-server-1
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: persistence-rabbitmq-server-2
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/persistence-rabbitmq-server-2
+  claimRef:
+    namespace: openstack
+    name: persistence-rabbitmq-server-2
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: swift-swift-storage-0
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/swift-swift-storage-0
+  claimRef:
+    namespace: openstack
+    name: swift-swift-storage-0
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: swift-swift-storage-1
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/swift-swift-storage-1
+  claimRef:
+    namespace: openstack
+    name: swift-swift-storage-1
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: swift-swift-storage-2
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 172.17.170.5
+    path: /nfs/rhoso_share/swift-swift-storage-2
+  claimRef:
+    namespace: openstack
+    name: swift-swift-storage-2
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage

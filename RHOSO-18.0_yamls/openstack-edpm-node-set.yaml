@@ -1,0 +1,123 @@
+apiVersion: dataplane.openstack.org/v1beta1
+kind: OpenStackDataPlaneNodeSet
+metadata:
+  name: openstack-data-plane
+  namespace: openstack
+spec:
+  env:
+    - name: ANSIBLE_FORCE_COLOR
+      value: "True"
+  preProvisioned: true
+  nodes:
+      edpm-compute1:
+        hostName: edpm-compute1
+        ansible:
+          ansibleHost: 172.17.170.30
+        networks:
+        - name: CtlPlane
+          subnetName: subnet1
+          defaultRoute: false
+          fixedIP: 172.17.163.90
+        - name: InternalApi
+          subnetName: subnet1
+        - name: Storage
+          subnetName: subnet1
+        - name: Tenant
+          subnetName: subnet1
+      edpm-compute2:
+        hostName: edpm-compute2
+        ansible:
+          ansibleHost: 172.17.170.31
+        networks:
+        - name: CtlPlane
+          subnetName: subnet1
+          defaultRoute: false
+          fixedIP: 172.17.163.91
+        - name: InternalApi
+          subnetName: subnet1
+        - name: Storage
+          subnetName: subnet1
+        - name: Tenant
+          subnetName: subnet1
+  networkAttachments:
+    - ctlplane
+  nodeTemplate:
+    ansibleSSHPrivateKeySecret: dataplane-ansible-ssh-private-key-secret
+    extraMounts:
+      - extraVolType: Logs
+        volumes:
+        - name: ansible-logs
+          persistentVolumeClaim:
+            claimName: dataplane-ansible-logs
+        mounts:
+        - name: ansible-logs
+          mountPath: "/runner/artifacts"
+    managementNetwork: ctlplane
+    ansible:
+      ansibleUser: cloud-admin
+      ansiblePort: 22
+      ansibleVarsFrom:
+        - prefix: subscription_manager_
+          secretRef:
+            name: subscription-manager
+        - secretRef:
+            name: redhat-registry
+      ansibleVars:
+        edpm_network_config_os_net_config_mappings:
+          edpm-compute1:
+            # Map nic1 to eno1/enp1s0f0
+            nic1: "9c:63:c0:95:b4:65"  
+          edpm-compute2:
+            # Map nic1 to eno1/enp1s0f0
+            nic1: "9c:63:c0:95:b4:0d"
+        edpm_bootstrap_command: |
+          subscription-manager register --username {{ 'vivekanandan.k@dell.com' }} --password {{ 'Vivek100192' }}
+          subscription-manager release --set=9.4
+          subscription-manager repos --disable=*
+          subscription-manager repos --enable=rhel-9-for-x86_64-baseos-eus-rpms --enable=rhel-9-for-x86_64-appstream-eus-rpms --enable=rhel-9-for-x86_64-highavailability-eus-rpms --enable=fast-datapath-for-rhel-9-x86_64-rpms --enable=rhoso-18.0-for-rhel-9-x86_64-rpms --enable=rhceph-7-tools-for-rhel-9-x86_64-rpms
+        edpm_bootstrap_release_version_package: []
+        neutron_physical_bridge_name: br-ex
+        neutron_public_interface_name: eno2np1.170
+        service_net_map:
+          nova_api_network: internal_api
+          nova_libvirt_network: internal_api
+        edpm_chrony_ntp_servers:
+          - 172.17.170.5
+        # edpm_network_config
+        # Default nic config template for a EDPM compute node
+        # These vars are edpm_network_config role vars
+        edpm_network_config_template: |
+          ---
+          {% set mtu_list = [ctlplane_mtu] %}
+          {% for network in nodeset_networks %}
+          {{ mtu_list.append(lookup('vars', networks_lower[network] ~ '_mtu')) }}
+          {%- endfor %}
+          {% set min_viable_mtu = mtu_list | max %}
+          network_config:
+          - type: ovs_bridge
+            name: {{ neutron_physical_bridge_name }}
+            mtu: {{ min_viable_mtu }}
+            use_dhcp: false
+            dns_servers: {{ ctlplane_dns_nameservers }}
+              #domain: {{ dns_search_domains }}
+            addresses:
+            - ip_netmask: {{ ctlplane_ip }}/{{ ctlplane_cidr }}
+            routes: {{ ctlplane_host_routes }}
+            members:
+            - type: interface
+              name: nic1
+              mtu: {{ min_viable_mtu }}
+              # force the MAC address of the bridge to this interface
+              primary: true
+          {% for network in nodeset_networks %}
+            - type: vlan
+              mtu: {{ lookup('vars', networks_lower[network] ~ '_mtu') }}
+              vlan_id: {{ lookup('vars', networks_lower[network] ~ '_vlan_id') }}
+              addresses:
+              - ip_netmask:
+                  {{ lookup('vars', networks_lower[network] ~ '_ip') }}/{{ lookup('vars', networks_lower[network] ~ '_cidr') }}
+              routes: {{ lookup('vars', networks_lower[network] ~ '_host_routes') }}
+          {% endfor %}
+        ctlplane_dns_nameservers:
+        - 10.228.254.66
+        - 172.17.170.1

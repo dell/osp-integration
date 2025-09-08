@@ -1,0 +1,21 @@
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: bond1-configurations-on-all-nodes
+spec:
+  desiredState:
+    interfaces:
+    - name: bond1
+      description: Bond with ports eno2np1 and ens3f0np0
+      type: bond
+      state: up
+      ipv4:
+        dhcp: false
+        enabled: false
+      link-aggregation:
+        mode: 802.3ad
+        options:
+          miimon: '100'
+        port:
+        - eno2np1
+        - ens3f0np0

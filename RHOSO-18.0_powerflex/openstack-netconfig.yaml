@@ -1,0 +1,68 @@
+apiVersion: network.openstack.org/v1beta1
+kind: NetConfig
+metadata:
+  name: openstacknetconfig
+  namespace: openstack
+spec:
+  networks:
+  - name: CtlPlane
+    dnsDomain: ctlplane.rhoso.com
+    subnets:
+    - name: subnet1
+      allocationRanges:
+      - end: 172.17.163.120
+        start: 172.17.163.90
+      - end: 172.17.163.180
+        start: 172.17.163.120
+      cidr: 172.17.163.0/24
+      gateway: 172.17.163.1
+      vlan: 163
+  - name: InternalApi
+    dnsDomain: internalapi.rhoso.com
+    subnets:
+    - name: subnet1
+      allocationRanges:
+      - end: 172.17.160.250
+        start: 172.17.160.100
+      excludeAddresses:
+      - 172.17.160.10
+      - 172.17.160.12
+      cidr: 172.17.160.0/24
+      vlan: 160
+  - name: External
+    dnsDomain: external.rhoso.com
+    subnets:
+    - name: subnet1
+      allocationRanges:
+      - end: 172.17.165.250
+        start: 172.17.165.100
+      cidr: 172.17.165.0/24
+      gateway: 172.17.165.1
+      vlan: 165
+  - name: Storage
+    dnsDomain: storage.rhoso.com
+    subnets:
+    - name: subnet1
+      allocationRanges:
+      - end: 172.17.161.250
+        start: 172.17.161.100
+      cidr: 172.17.161.0/24
+      vlan: 161
+  - name: StorageMgmt
+    dnsDomain: storagemgmt.rhoso.com
+    subnets:
+    - name: subnet1
+      allocationRanges:
+      - end: 172.17.164.250
+        start: 172.17.164.100
+      cidr: 172.17.164.0/24
+      vlan: 164
+  - name: Tenant
+    dnsDomain: tenant.rhoso.com
+    subnets:
+    - name: subnet1
+      allocationRanges:
+      - end: 172.17.162.250
+        start: 172.17.162.100
+      cidr: 172.17.162.0/24
+      vlan: 162

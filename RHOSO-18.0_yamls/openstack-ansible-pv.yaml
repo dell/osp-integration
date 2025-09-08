@@ -1,0 +1,28 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: dataplane-ansible-logs
+  namespace: openstack
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  local:
+    path: /mnt/openstack/ansible-logs-pv
+  claimRef:
+    namespace: openstack
+    name: dataplane-ansible-logs
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - ocpnode1.rhoso.com
+          - ocpnode2.rhoso.com
+          - ocpnode3.rhoso.com
+  persistentVolumeReclaimPolicy: Delete
+  volumeMode: Filesystem
+  storageClassName: local-storage
