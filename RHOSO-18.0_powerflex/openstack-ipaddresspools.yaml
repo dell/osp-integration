@@ -1,0 +1,54 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: internalapi
+  namespace: metallb-system
+spec:
+  addresses:
+    - 172.17.160.70-172.17.160.80
+  autoAssign: true
+  avoidBuggyIPs: false
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  namespace: metallb-system
+  name: ctlplane
+spec:
+  addresses:
+    - 172.17.163.70-172.17.163.80
+  autoAssign: true
+  avoidBuggyIPs: false
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  namespace: metallb-system
+  name: storage
+spec:
+  addresses:
+    - 172.17.161.70-172.17.161.80
+  autoAssign: true
+  avoidBuggyIPs: false
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  namespace: metallb-system
+  name: tenant
+spec:
+  addresses:
+    - 172.17.162.71-172.17.162.80
+  autoAssign: true
+  avoidBuggyIPs: false
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  namespace: metallb-system
+  name: external
+spec:
+  addresses:
+    - 172.17.165.71-172.17.165.80
+  autoAssign: true
+  avoidBuggyIPs: false
