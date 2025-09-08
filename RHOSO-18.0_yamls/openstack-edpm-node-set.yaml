@@ -71,7 +71,7 @@ spec:
             # Map nic1 to eno1/enp1s0f0
             nic1: "9c:63:c0:95:b4:0d"
         edpm_bootstrap_command: |
-          subscription-manager register --username {{ 'vivekanandan.k@dell.com' }} --password {{ 'Vivek100192' }}
+          subscription-manager register --username {{ 'redhat_subscription_username' }} --password {{ 'redhat_subscription_password' }}
           subscription-manager release --set=9.4
           subscription-manager repos --disable=*
           subscription-manager repos --enable=rhel-9-for-x86_64-baseos-eus-rpms --enable=rhel-9-for-x86_64-appstream-eus-rpms --enable=rhel-9-for-x86_64-highavailability-eus-rpms --enable=fast-datapath-for-rhel-9-x86_64-rpms --enable=rhoso-18.0-for-rhel-9-x86_64-rpms --enable=rhceph-7-tools-for-rhel-9-x86_64-rpms
