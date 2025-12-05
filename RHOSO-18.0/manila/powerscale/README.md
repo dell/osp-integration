@@ -12,7 +12,6 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 
 - A working Red Hat OpenStack Services on OpenShift 18.0.14 environment.
 - Dell PowerScale(9.13) storage cluster running a supported OneFS version.
-- Network access between Manila pods and PowerScale SmartConnect Service IP.
 
 ## Steps
 
