@@ -1,4 +1,4 @@
-# Dell EMC PowerFlex Backend Deployment Guide for Red Hat OpenStack Services on OpenShift 18.0
+# Dell PowerScale Backend Deployment Guide for Red Hat OpenStack Services on OpenShift 18.0
 
 ## Overview
 
