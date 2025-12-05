@@ -19,7 +19,7 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 ### Configure Dell PowerScale details
 Manila uses a DriverBackedShare mechanism to manage share backends.You must create a Secret containing PowerScale credentials and then reference this secret in the Manila control-plane configuration.
 
-* Create a Secret CR file manila-powerscale-secrets.yaml
+* Create a Secret CR file manila-powerscale-secrets.yaml.
   
 ```yaml  
 apiVersion: v1
@@ -38,13 +38,13 @@ stringData:
 type: Opaque
 ```
 
-* Apply the CR file 
+* Apply the CR file.
 ```yaml
 oc create -f manila-powerscale-secrets.yaml
 secret/manila-powerscale-secrets created
 ```
 
-* Verify the secret is created
+* Verify the secret is created.
 ```yaml
 oc get secret/manila-powerscale-secrets -o jsonpath={.data.powerscale-secrets} | base64 -d
 [powerscale]
@@ -85,7 +85,7 @@ Edit your OpenStackControlPlane custom resource file (openstack_control_plane.ya
 ```
 oc apply -f openstackcontrolplane.yaml
 ```
-* Verify the pod is running
+* Verify the pod is running.
 
 ```
 oc get pods -n openstack | grep powerscale
@@ -94,7 +94,7 @@ manila-share-powerscale-0                                         2/2     Runnin
 
 ### Test the configured Backend
 
-* Ensure Manila share service is up and running
+* Ensure Manila share service is up and running.
 Open a session on the openstackclient pod:
 ```
 oc rsh openstackclient
@@ -120,11 +120,9 @@ Map it to backend:
 ```
 openstack share type set --property share_backend_name=powerscale powerscale
 ```
-Confirm the share type is exits and is successfully configured
+Confirm the share type is exits and is successfully configured.
 ```
-openstack share type show powerscale
-```
-sh-5.1$ openstack share type show powerscale1
+sh-5.1$ openstack share type show powerscale
 +----------------------+-------------------------------------------+
 | Field                | Value                                     |
 +----------------------+-------------------------------------------+
@@ -168,7 +166,7 @@ sh-5.1$ openstack share create --name testshare --share-type powerscale nfs 1
 | volume_type                           | powerscale                           |
 +---------------------------------------+--------------------------------------+
 ```
-Confirm the share was created successfully
+Confirm the share was created successfully.
 ```
 sh-5.1$ openstack share list
 +--------------------------------------+-----------+------+-------------+-----------+-----------+-----------------+-----------------------------------+-------------------+
