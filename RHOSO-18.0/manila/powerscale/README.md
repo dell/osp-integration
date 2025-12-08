@@ -2,9 +2,9 @@
 
 ## Overview
 
-This instruction provides detailed steps on how to enable Dell PowerScale(Isilon) storage backend with RHOSO 18.0.14.
+These instructions provide detailed steps on how to enable Dell PowerScale (formerly known as Isilon) storage backend with RHOSO 18.0.14.
 
-**NOTICE**: this README represents only the **basic** steps necessary to enable manila to use a Dell Powerscale as backend. It does not contain steps of other components in the system applicable to your particular installation.
+**NOTICE**: this README represents only the **basic** necessary steps to enable manila to use a Dell Powerscale as backend. It does not contain steps of other components in the system applicable to your particular installation.
 
 For more information please refer to [Product Documentation for Red Hat OpenStack Services on OpenShift 18.0](https://docs.redhat.com/en/documentation/red_hat_openstack_services_on_openshift/18.0/).
 
@@ -94,7 +94,7 @@ manila-share-powerscale-0                                         2/2     Runnin
 ### Test the configured Backend
 
 * Ensure Manila share service is up and running.
-Open a session on the openstackclient pod:
+Open a session on the openstackclient pod.
 ```
 oc rsh openstackclient
 ```
@@ -109,17 +109,18 @@ sh-5.1$ openstack share service list
 +------------------+-----------------------+------+---------+-------+----------------------------+
 ```
 
-* Create a Share Type
+* Create a Share Type.
+
 Finally, create a PowerScale share type and test if you can successfully create and attach shares of that type.
-Create a share type name powerscale:
+Create a share type name powerscale.
 ```
 openstack share type create --driver-handles-share-servers false powerscale
 ```
-Map it to backend:
+Map it to backend.
 ```
 openstack share type set --property share_backend_name=powerscale powerscale
 ```
-Confirm the share type is exits and is successfully configured.
+Verify that the share type is exists and is successfully configured.
 ```
 sh-5.1$ openstack share type show powerscale
 +----------------------+-------------------------------------------+
@@ -133,8 +134,9 @@ sh-5.1$ openstack share type show powerscale
 | description          | None                                      |
 +----------------------+-------------------------------------------+
 ```
-* Validate a Share Type
-Create a volume using the type created above without error to ensure the availability of the backend.
+* Validate a Share Type.
+
+Create a volume using the type created above and ensure there is no error to confirm the availability of the backend.
 ```
 sh-5.1$ openstack share create --name testshare --share-type powerscale nfs 1
 +---------------------------------------+--------------------------------------+
