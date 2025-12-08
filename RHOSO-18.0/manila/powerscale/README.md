@@ -4,19 +4,19 @@
 
 These instructions provide detailed steps on how to enable Dell PowerScale (formerly known as Isilon) storage backend with RHOSO 18.0.
 
-**NOTICE**: this README represents only the **basic** necessary steps to enable manila to use a Dell Powerscale as backend. It does not contain steps of other components in the system applicable to your particular installation.
+**NOTICE**: this README represents only the **basic** necessary steps to enable Manila to use a Dell Powerscale as backend. It does not contain steps of other components in the system applicable to your particular installation.
 
 For more information please refer to [Product Documentation for Red Hat OpenStack Services on OpenShift 18.0](https://docs.redhat.com/en/documentation/red_hat_openstack_services_on_openshift/18.0/).
 
 ## Prerequisites
 
 - A working Red Hat OpenStack Services on OpenShift 18.0.14 environment.
-- Dell PowerScale(9.13) storage cluster running a supported OneFS version.
+- Dell PowerScale (9.13) storage cluster running a supported OneFS version.
 
 ## Steps
 
 ### Configure Dell PowerScale details
-Manila uses a DriverBackedShare mechanism to manage share backends.You must create a Secret containing PowerScale credentials and then reference this secret in the Manila control-plane configuration.
+Manila uses a DriverBackedShare mechanism to manage share backends. You must create a Secret containing PowerScale credentials and then reference this secret in the Manila control-plane configuration.
 
 * Create a Secret CR file manila-powerscale-secrets.yaml.
   
@@ -32,8 +32,8 @@ stringData:
   powerscale-secrets.conf: |
     [powerscale]
     emc_nas_server = <DellPowerScaleIP>
-    emc_nas_login = <DellPowerScaleuser>
-    emc_nas_password = <DellPowerScalepassword>
+    emc_nas_login = <DellPowerScaleUser>
+    emc_nas_password = <DellPowerScalePassword>
 type: Opaque
 ```
 
@@ -48,13 +48,13 @@ secret/manila-powerscale-secrets created
 oc get secret/manila-powerscale-secrets -o jsonpath={.data.powerscale-secrets} | base64 -d
 [powerscale]
 emc_nas_server = <DellPowerScaleIP>
-emc_nas_login = <DellPowerScaleuser>
-emc_nas_password = <DellPowerScalepassword>
+emc_nas_login = <DellPowerScaleUser>
+emc_nas_password = <DellPowerScalePassword>
 ```
-For full detailed instruction of all options please refer to [PowerScale Backend Configuration](https://docs.openstack.org/manila/latest/configuration/shared-file-systems/drivers/dell-emc-powerscale-driver.html).
+For full detailed instructions of available options please refer to [PowerScale Backend Configuration](https://docs.openstack.org/manila/latest/configuration/shared-file-systems/drivers/dell-emc-powerscale-driver.html).
 
 ### Configure Manila to Use the Dell PowerScale Backend
-Edit your OpenStackControlPlane custom resource file (openstack_control_plane.yaml).
+Edit your OpenStackControlPlane CR file (openstack_control_plane.yaml).
 
 * Add the following under spec.manila.manilaShares:
 ```
@@ -98,7 +98,7 @@ Open a session on the openstackclient pod.
 ```
 oc rsh openstackclient
 ```
-* Run the following command to check whether the manila services is up:
+* Run the following command to check whether the Manila services is up:
 ```
 sh-5.1$ openstack share service list
 +------------------+-----------------------+------+---------+-------+----------------------------+
