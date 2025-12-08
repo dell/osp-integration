@@ -2,7 +2,7 @@
 
 ## Overview
 
-These instructions provide detailed steps on how to enable Dell PowerScale (formerly known as Isilon) storage backend with RHOSO 18.0.14.
+These instructions provide detailed steps on how to enable Dell PowerScale (formerly known as Isilon) storage backend with RHOSO 18.0.
 
 **NOTICE**: this README represents only the **basic** necessary steps to enable manila to use a Dell Powerscale as backend. It does not contain steps of other components in the system applicable to your particular installation.
 
