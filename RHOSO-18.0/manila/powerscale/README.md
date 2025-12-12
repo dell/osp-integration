@@ -67,7 +67,7 @@ Edit your OpenStackControlPlane CR file (openstack_control_plane.yaml).
             enabled_share_backends = powerscale
             [powerscale]
             driver_handles_share_servers = False
-            emc_share_backend = isilon
+            emc_share_backend = powerscale
             share_backend_name = powerscale
             enabled_share_protocols = NFS,CIFS
             share_driver = manila.share.drivers.dell_emc.driver.EMCShareDriver
