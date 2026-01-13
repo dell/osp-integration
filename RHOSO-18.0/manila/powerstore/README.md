@@ -37,7 +37,7 @@ stringData:
 type: Opaque
 ```
 
-* Apply the CR file.
+Apply the CR file.
 ```yaml
 oc create -f manila-powerstore-secrets.yaml
 secret/manila-powerstore-secrets created
@@ -54,7 +54,7 @@ emc_nas_password = <DellPowerStorePassword>
 For full detailed instructions of available options please refer to [PowerStore Backend Configuration](https://docs.openstack.org/manila/latest/configuration/shared-file-systems/drivers/dell-emc-powerstore-driver.html).
 
 ### Configure Manila to Use the Dell PowerStore Backend
-Edit your OpenStackControlPlane CR file (openstack_control_plane.yaml).
+Edit your OpenStackControlPlane CR file.
 
 * Add the following under spec.manila.manilaShares:
 ```
@@ -115,11 +115,11 @@ Create a share type name powerstore.
 ```
 openstack share type create --driver-handles-share-servers false powerstore
 ```
-Map it to backend.
+Map it to backend name that you previously defined.
 ```
 openstack share type set --property share_backend_name=powerstore powerstore
 ```
-Verify that the share type is exists and is successfully configured.
+Verify that the share type exists and is successfully configured.
 ```
 sh-5.1$ openstack share type show powerstore
 +----------------------+-------------------------------------------+
@@ -215,7 +215,7 @@ sh-5.1$ openstack share create --name testshare2 --share-type powerstore cifs 1
 | volume_type                           | powerstore                           |
 +---------------------------------------+--------------------------------------+
 ```
-Confirm the share was created successfully.
+Confirm the shares are created successfully.
 ```
 sh-5.1$ openstack share list
 
