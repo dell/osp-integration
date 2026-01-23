@@ -199,6 +199,7 @@ In this section, we'll validate the cinder configuration by following the steps 
 * Create a specific volume type which will be used by Cinder.
 * Create a volume on the Dell PowerStore using that volume type.
 
+
 * Open a session on the **openstackclient** pod.
 ```
 oc rsh openstackclient
@@ -222,7 +223,7 @@ sh-5.1$ openstack volume service list
 sh-5.1$ openstack volume type create --property volume_backend_name=powerstore powerstore
 ```
 
-* Confirm the volume type exists and is successfully configured.
+Confirm the volume type exists and is successfully configured.
 ```
 sh-5.1$ openstack volume type show powerstore
 +--------------------+------------------------------------------------------------+
@@ -238,7 +239,7 @@ sh-5.1$ openstack volume type show powerstore
 +--------------------+------------------------------------------------------------+
 ```
 
-Create a volume using the type created above without error to ensure the availability of the backend.
+* Create a volume using the type created above without error to ensure the availability of the backend.
 ```
 sh-5.1$ openstack volume create --type powerstore --size 1 vol
 +---------------------+--------------------------------------+
@@ -365,8 +366,9 @@ sh-5.1$ openstack volume create --type powerstoreFC --size 1 vol-FC
 | updated_at          | None                                 |
 | user_id             | 9356914d779d443f8cc09ebdf62ef7c9     |
 +---------------------+--------------------------------------+
+```
 
-
+```
 sh-5.1$ openstack volume create --type powerstoreISCSI --size 1 vol-ISCSI
 +---------------------+--------------------------------------+
 | Field               | Value                                |
