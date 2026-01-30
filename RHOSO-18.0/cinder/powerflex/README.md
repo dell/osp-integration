@@ -87,9 +87,9 @@ PowerFlex requires the Storage Data Client (SDC) to be present on both control p
 
 * Install PowerFlex SDC on Control Plane (OpenShift).
 PowerFlex SDC must be available on OpenShift worker nodes hosting OpenStack services which is achieved using Dell Container Storage Modules (CSM).
-- Install Dell Container Storage Modules (CSM) Operator (pick the certified operator) from OperatorHub. 
-- Deploy PowerFlex CSM using the link provided below so that SDC runs as a container. 
-- Ensure SDC is connected to the PowerFlex system.
+  Install Dell Container Storage Modules (CSM) Operator (pick the certified operator) from OperatorHub. 
+  Deploy PowerFlex CSM using the link provided below so that SDC runs as a container. 
+  Ensure SDC is connected to the PowerFlex system.
  
 Follow the documentation located here https://dell.github.io/csm-docs/docs/getting-started/installation/openshift/powerflex/csmoperator/ for detailed steps.
  
@@ -104,13 +104,13 @@ vxflexos-node-xvd58                    2/2     Running   0          10d
 ```
 
 Verify that the SDC is successfully registered with PowerFlex.
-- From PowerFlex Manager navigate → Block → Hosts.
-- OpenShift worker nodes should appear as connected hosts.
+  From PowerFlex Manager navigate → Block → Hosts.
+  OpenShift worker nodes should appear as connected hosts.
 
 * Install PowerFlex SDC on EDPM (dataplane) Nodes.
 PowerFlex SDC must also be installed on all EDPM compute nodes using the appropriate RPM.
 
-To [install SDC](https://www.dell.com/support/manuals/en-ie/scaleio/powerflex_install_upgrade_guide_4.5.x/install-the-storage-data-client-on-a-linux-based-server?guid=guid-edaac602-f18b-4fe6-b825-ee09c6cdddd1&lang=en-us) on the compute(EDPM) nodes.
+To [install SDC](https://www.dell.com/support/manuals/en-ie/scaleio/powerflex_install_upgrade_guide_4.5.x/install-the-storage-data-client-on-a-linux-based-server?guid=guid-edaac602-f18b-4fe6-b825-ee09c6cdddd1&lang=en-us) on the compute (EDPM) nodes.
 
 - Get the MDM IP's from PowerFlex.
 - Copy the EMC-ScaleIO-sdc-*.rpm which corresponds to your RHEL OS level version to the EDPM nodes.
@@ -142,7 +142,7 @@ san_password = <PF_Manager_password>
 san_password = <PF_Manager_password>
 ```
 
-Before the dataplane is deployed, in the `dataplane-nodeset.yaml` enter the following:
+* Before the dataplane is deployed, in the `dataplane-nodeset.yaml` enter the following:
 ```
 edpm_network_config_template: |
 ...
@@ -155,7 +155,7 @@ edpm_nova_extra_bind_mounts:
           src: /opt/patches/os_brick/initiator/connectors/scaleio.py
 ```
 
-Note: The same powerflex-connector secret can be used with the ExtraMount so the nova-compute pod has access to the `connector.conf` file. This would eliminate the need to manually configure the file on the host.
+**NOTICE**: The same powerflex-connector secret can be used with the ExtraMount so the nova-compute pod has access to the `connector.conf` file. This would eliminate the need to manually configure the file on the host.
 
 * Create PowerFlex Connector Secret file. 
 ```yaml  
@@ -183,7 +183,7 @@ Verify the secret is created.
 oc describe secret/powerflex-connector-conf-file
 ```
 
-In the OpenStackControlPlane CR and add an extraMount specification as follows:
+In the OpenStackControlPlane CR add an extraMount specification as follows:
 
 * Mount connector secret using under extraMounts:
 ```
