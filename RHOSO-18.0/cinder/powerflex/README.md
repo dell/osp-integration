@@ -183,9 +183,9 @@ Verify the secret is created.
 oc describe secret/powerflex-connector-conf-file
 ```
 
-In the OpenStackControlPlane CR and add an extraMount specification as follows
-```
-Mount connector secret using under extraMounts:
+In the OpenStackControlPlane CR and add an extraMount specification as follows:
+
+* Mount connector secret using under extraMounts:
 ```
 ...
   extraMounts:
@@ -222,8 +222,8 @@ sh-5.1$ openstack volume service list
 | cinder-backup    | cinder-backup-0                              | nova | enabled | up    | 2026-01-28T09:25:21.000000 |
 | cinder-volume    | cinder-volume-powerflex-0@powerflex          | nova | enabled | up    | 2026-01-28T09:25:20.000000 |
 +------------------+----------------------------------------------+------+---------+-------+----------------------------+
-
 ```
+
 * Create volume type for the powerflex
 ```
 sh-5.1$ openstack volume type create powerflex
