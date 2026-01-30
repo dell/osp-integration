@@ -52,7 +52,7 @@ For full detailed instruction of all options please refer to [PowerFlex Backend 
 
 * Configure `OpenStackControlPlane` with PowerFlex details by editing the OpenStackControlPlane CR to add the PowerFlex backend information.
 
-Use the cinderVolumes section as follows:
+Use the `cinderVolumes` section as follows:
 ```
 ...
 cinderVolumes:
@@ -85,11 +85,11 @@ cinder-volume-powerflex-0                                       2/2     Running 
 ### PowerFlex SDC Deployment
 PowerFlex requires the Storage Data Client (SDC) to be present on both control plane and data plane nodes.
 
-* Install PowerFlex SDC on Control Plane (OpenShift).
+** Install PowerFlex SDC on Control Plane (OpenShift)**
 PowerFlex SDC must be available on OpenShift worker nodes hosting OpenStack services which is achieved using Dell Container Storage Modules (CSM).
-  Install Dell Container Storage Modules (CSM) Operator (pick the certified operator) from OperatorHub. 
-  Deploy PowerFlex CSM using the link provided below so that SDC runs as a container. 
-  Ensure SDC is connected to the PowerFlex system.
+- Install Dell Container Storage Modules (CSM) Operator (pick the certified operator) from OperatorHub. 
+- Deploy PowerFlex CSM using the link provided below so that SDC runs as a container. 
+- Ensure SDC is connected to the PowerFlex system.
  
 Follow the documentation located here https://dell.github.io/csm-docs/docs/getting-started/installation/openshift/powerflex/csmoperator/ for detailed steps.
  
@@ -104,10 +104,10 @@ vxflexos-node-xvd58                    2/2     Running   0          10d
 ```
 
 Verify that the SDC is successfully registered with PowerFlex.
-  From PowerFlex Manager navigate → Block → Hosts.
-  OpenShift worker nodes should appear as connected hosts.
+- From PowerFlex Manager navigate → Block → Hosts.
+- OpenShift worker nodes should appear as connected hosts.
 
-* Install PowerFlex SDC on EDPM (dataplane) Nodes.
+** Install PowerFlex SDC on EDPM (dataplane) Nodes**
 PowerFlex SDC must also be installed on all EDPM compute nodes using the appropriate RPM.
 
 To [install SDC](https://www.dell.com/support/manuals/en-ie/scaleio/powerflex_install_upgrade_guide_4.5.x/install-the-storage-data-client-on-a-linux-based-server?guid=guid-edaac602-f18b-4fe6-b825-ee09c6cdddd1&lang=en-us) on the compute (EDPM) nodes.
