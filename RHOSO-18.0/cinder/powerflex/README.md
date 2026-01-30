@@ -85,7 +85,8 @@ cinder-volume-powerflex-0                                       2/2     Running 
 ### PowerFlex SDC Deployment
 PowerFlex requires the Storage Data Client (SDC) to be present on both control plane and data plane nodes.
 
-**Install PowerFlex SDC on Control Plane (OpenShift)**
+**Install PowerFlex SDC on Control Plane (OpenShift)**:
+
 PowerFlex SDC must be available on OpenShift worker nodes hosting OpenStack services which is achieved using Dell Container Storage Modules (CSM).
 - Install Dell Container Storage Modules (CSM) Operator (pick the certified operator) from OperatorHub. 
 - Deploy PowerFlex CSM using the link provided below so that SDC runs as a container. 
@@ -107,11 +108,11 @@ Verify that the SDC is successfully registered with PowerFlex.
 - From PowerFlex Manager navigate → Block → Hosts.
 - OpenShift worker nodes should appear as connected hosts.
 
-**Install PowerFlex SDC on EDPM (dataplane) Nodes**
+**Install PowerFlex SDC on EDPM (dataplane) Nodes**:
+
 PowerFlex SDC must also be installed on all EDPM compute nodes using the appropriate RPM.
 
 To [install SDC](https://www.dell.com/support/manuals/en-ie/scaleio/powerflex_install_upgrade_guide_4.5.x/install-the-storage-data-client-on-a-linux-based-server?guid=guid-edaac602-f18b-4fe6-b825-ee09c6cdddd1&lang=en-us) on the compute (EDPM) nodes.
-
 - Get the MDM IP's from PowerFlex.
 - Copy the EMC-ScaleIO-sdc-*.rpm which corresponds to your RHEL OS level version to the EDPM nodes.
 - Install the RPM as the root user.
