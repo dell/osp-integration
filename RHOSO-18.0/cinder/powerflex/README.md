@@ -2,7 +2,7 @@
 
 ## Overview
 
-This instructions provide detailed steps to enable Dell PowerFlex (formerly know as VxFlex OS/ScaleIO) as a Cinder backend for Red Hat OpenStack Services on OpenShift (RHOSO) 18.0.
+This instructions provide detailed steps to enable Dell PowerFlex (formerly known as VxFlex OS/ScaleIO) as a Cinder backend for Red Hat OpenStack Services on OpenShift (RHOSO) 18.0.
 
 **NOTICE**: This README represents only the **basic** necessary steps to enable Cinder to use a Dell PowerFlex as a backend. It does not contain steps of other components of the system applicable to your particular installation.
 
