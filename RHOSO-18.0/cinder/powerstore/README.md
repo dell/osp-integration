@@ -11,12 +11,12 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 ## Prerequisites
 
 - A working Red Hat OpenStack Services on OpenShift 18.0.14 environment.
-- Dell PowerStore running a supported PowerStoreOS.
+- Dell PowerStore running a supported PowerStoreOS version.
 
 ## Steps
 
 ### Configure Dell PowerStore storage details
-This section is broken down into two sub-sections. In the first, we'll cover how to configure a PowerStore FC based backend while we'll talk about PowerStore iSCSI based backend in the latter.
+This section is broken down into two sub-sections. First of all, we'll cover how to configure a PowerStore FC based backend while we'll talk about PowerStore iSCSI based backend in the latter.
 Finally, we'll discover how to configure a multi-backend using both PowerStore FC and iSCSI with an example.
 
 For detailed instructions and supported configuration options, please refer to [Dell PowerStore Backend Configuration](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powerstore-driver.html).
