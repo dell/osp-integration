@@ -2,9 +2,9 @@
 
 ## Overview
 
-This instructions provide detailed steps to enable Dell PowerFlex(formerly know as VxFlex OS/ScaleIO) as a Cinder block storage backend for ge backend with RHOSO 18.0.
+This instructions provide detailed steps to enable Dell PowerFlex (formerly know as VxFlex OS/ScaleIO) as a Cinder backend for Red Hat OpenStack Services on OpenShift (RHOSO) 18.0.
 
-**NOTICE**: This README represents only the **basic** necessary steps to enable Cinder to use a Dell PowerFlex as backend. It does not contain steps of other components of the system applicable to your particular installation.
+**NOTICE**: This README represents only the **basic** necessary steps to enable Cinder to use a Dell PowerFlex as a backend. It does not contain steps of other components of the system applicable to your particular installation.
 
 For more information please refer to [Product Documentation for Red Hat OpenStack Services on OpenShift 18.0](https://docs.redhat.com/en/documentation/red_hat_openstack_services_on_openshift/18.0/).
 
@@ -50,7 +50,7 @@ oc describe secret/cinder-volume-powerflex-secrets
 
 For full detailed instruction of all options please refer to [PowerFlex Backend Configuration](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powerflex-driver.html).
 
-* Configure `OpenStackControlPlane` with PowerFlex details by editing the OpenStackControlPlane CR to add the PowerFlex backend information.
+* Configure `OpenStackControlPlane` with PowerFlex details by editing the OpenStackControlPlane CR file to add the PowerFlex backend information.
 
 Use the `cinderVolumes` section as follows:
 ```
@@ -87,7 +87,7 @@ PowerFlex requires the Storage Data Client (SDC) to be present on both control p
 
 **Install PowerFlex SDC on Control Plane (OpenShift)**:
 
-PowerFlex SDC must be available on OpenShift worker nodes hosting OpenStack services which is achieved using Dell Container Storage Modules (CSM).
+PowerFlex SDC must be available on OpenShift worker nodes hosting OpenStack services. This installation process is achieved using Dell Container Storage Modules (CSM).
 - Install Dell Container Storage Modules (CSM) Operator (pick the certified operator) from OperatorHub. 
 - Deploy PowerFlex CSM using the link provided below so that SDC runs as a container. 
 - Ensure SDC is connected to the PowerFlex system.
@@ -124,7 +124,7 @@ Verify where SDC installed nodes are connected in PowerFlex Manager.
 - EDPM nodes appear as connected.
 
 ### Configure the connector
-PowerFlex Connector Secret file required for volume attach and detach operations.This is consumed by os-brick during Nova attach workflows.
+PowerFlex Connector Secret file required for volume attach and detach operations. This is consumed by os-brick during Nova attach workflows.
 Before the dataplane is installed, on each of the EDPM nodes do the following:
 
 * Create `/opt/emc/scaleio/openstack/connector.conf` if it does not exist.
@@ -156,7 +156,7 @@ edpm_nova_extra_bind_mounts:
           src: /opt/patches/os_brick/initiator/connectors/scaleio.py
 ```
 
-**NOTICE**: The same powerflex-connector secret can be used with the ExtraMount so the nova-compute pod has access to the `connector.conf` file. This would eliminate the need to manually configure the file on the host.
+**NOTICE**: The same powerflex-connector secret can be used with the ExtraMount so the nova-compute container has access to the `connector.conf` file. This would eliminate the need to manually configure the file on the host.
 
 * Create PowerFlex Connector Secret file. 
 ```yaml  
@@ -184,7 +184,7 @@ Verify the secret is created.
 oc describe secret/powerflex-connector-conf-file
 ```
 
-In the OpenStackControlPlane CR add an extraMount specification as follows:
+In the OpenStackControlPlane CR file add an extraMount specification as follows:
 
 * Mount connector secret using under extraMounts:
 ```
