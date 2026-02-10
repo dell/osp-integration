@@ -10,7 +10,7 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 
 ## Prerequisites
 
-- A working Red Hat OpenStack Services on OpenShift 18.0.14 environment.
+- A working Red Hat OpenStack Services on OpenShift 18.0 environment.
 - Dell PowerStore running a supported PowerStoreOS version.
 
 ## Steps
@@ -138,7 +138,7 @@ volume_backend_name.**
           - cinder-volume-powerstore-iscsi-secrets
           networkAttachments:
           - storage
-          - storageMhmt
+          - storageMgmt
           replicas: 1
           resources: {}
 ...
@@ -207,7 +207,6 @@ oc rsh openstackclient
 
 * Confirm the cinder-volume service for Dell PowerStore as a backend is up and running.
 ```
-[admin@rhadmin ~]$ oc rsh openstackclient
 sh-5.1$ openstack volume service list
 +------------------+----------------------------------------------+------+---------+-------+----------------------------+
 | Binary           | Host                                         | Zone | Status  | State | Updated At                 |
@@ -288,7 +287,6 @@ oc rsh openstackclient
 
 * Confirm the cinder-volume service for all Dell PowerStore backend are up and running
 ```
-[admin@rhadmin ~]$ oc rsh openstackclient
 sh-5.1$ openstack volume service list
 +------------------+----------------------------------------------+------+---------+-------+----------------------------+
 | Binary           | Host                                         | Zone | Status  | State | Updated At                 |
