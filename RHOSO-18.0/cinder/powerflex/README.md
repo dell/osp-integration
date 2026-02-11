@@ -10,7 +10,7 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 
 ## Prerequisites
 
-- A working Red Hat OpenStack Services on OpenShift 18.0.14 environment.
+- A working Red Hat OpenStack Services on OpenShift 18.0 environment.
 - Dell PowerFlex 4.x cluster with at least one Storage Pool available.
 - PowerFlex Storage Data Client (SDC) for RHEL9.4.
 
@@ -50,22 +50,23 @@ oc describe secret/cinder-volume-powerflex-secrets
 
 For full detailed instruction of all options please refer to [PowerFlex Backend Configuration](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powerflex-driver.html).
 
-* Configure `OpenStackControlPlane` with PowerFlex details by editing the OpenStackControlPlane CR file to add the PowerFlex backend information.
+* Configure `OpenStackControlPlane` with PowerFlex details by editing control plane CR file (openstackcontrolplane.yaml) to add the PowerFlex backend information.
 
 Use the `cinderVolumes` section as follows:
 ```
 ...
-cinderVolumes:
+      cinderVolumes:
         powerflex:
           customServiceConfig: |
             [powerflex]
-            volume_driver = cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver
             volume_backend_name = powerflex
+            volume_driver = cinder.volume.drivers.dell_emc.powerflex.driver.PowerFlexDriver
             powerflex_storage_pools = Domain1:Pool1,Domain2:Pool2
           customServiceConfigSecrets:
           - cinder-volume-powerflex-secrets
           networkAttachments:
           - storage
+          - storageMgmt
           replicas: 1
           resources: {}
 ...
@@ -123,91 +124,8 @@ Verify where SDC installed nodes are connected in PowerFlex Manager.
 - From PowerFlex Manager navigate → Block → Hosts.
 - EDPM nodes appear as connected.
 
-### Configure the connector
-PowerFlex Connector Secret file required for volume attach and detach operations. This is consumed by os-brick during Nova attach workflows.
-Before the dataplane is installed, on each of the EDPM nodes do the following:
 
-* Create `/opt/emc/scaleio/openstack/connector.conf` if it does not exist.
-
-```bash
-$ touch /opt/emc/scaleio/openstack/connector.conf
-```
-Edit the `/opt/emc/scaleio/openstack/connector.conf` and populate it with passwords.
-
-Example:
-```
-[powerflex]
-san_password = <PF_Manager_password>
-
-[powerflex-new]
-san_password = <PF_Manager_password>
-```
-
-* Before the dataplane is deployed, in the `dataplane-nodeset.yaml` enter the following:
-```
-edpm_network_config_template: |
-...
-edpm_nova_extra_bind_mounts:
-       - dest: /opt/emc/scaleio/openstack
-          options: ro
-          src: /opt/emc/scaleio/openstack
-        - dest: /usr/lib/python3.9/site-packages/os_brick/initiator/connectors/scaleio.py
-          options: ro
-          src: /opt/patches/os_brick/initiator/connectors/scaleio.py
-```
-
-**NOTICE**: The same powerflex-connector secret can be used with the ExtraMount so the nova-compute container has access to the `connector.conf` file. This would eliminate the need to manually configure the file on the host.
-
-* Create PowerFlex Connector Secret file. 
-```yaml  
-apiVersion: v1
-kind: Secret
-metadata:
-  name: powerflex-connector-conf-file
-  labels:
-    component: cinder-volume
-    service: cinder
-type: Opaque
-stringData:
-  connector.conf: |
-    [powerflex]
-    san_password = <PF_Manager_password>
-```
-
-Apply the CR file. 
-```yaml
-oc create -f powerflex-connector-secret.yaml
-```
-
-Verify the secret is created.
-```yaml
-oc describe secret/powerflex-connector-conf-file
-```
-
-In the OpenStackControlPlane CR file add an extraMount specification as follows:
-
-* Mount connector secret using under extraMounts:
-```
-...
-  extraMounts:
-  - extraVol:
-    - extraVolType: powerflex
-      mounts:
-      - mountPath: /opt/emc/scaleio/openstack
-        name: powerflex-connector
-        readOnly: true
-      propagation:
-      - CinderVolume
-      volumes:
-      - name: powerflex-connector
-        secret:
-          secretName: powerflex-connector-conf-file
-    name: v1
-    region: r1
-...
-```
-
-Save and exit the file. Apply the CR.
+**NOTICE**: PowerFlex Connector Secret file is only required for legacy driver's volume attach and detach operations. Now connector configuration for Dell PowerFlex driver is deprecated.
 
 ### Test the configured Backend
 Finally, create a PowerFlex volume type and test if you can successfully create and attach volumes of that type.
@@ -241,7 +159,7 @@ sh-5.1$ openstack volume type show powerflex
 | description        |                                                       |
 | id                 | b7bff211-a6cd-435d-aa27-2187c3e46f68                  |
 | is_public          | True                                                  |
-| name               | powerflex1                                            |
+| name               | powerflex                                             |
 | properties         | pool_name='PD1:SP1', volume_backend_name='powerflex ' |
 | qos_specs_id       | None                                                  |
 +--------------------+-------------------------------------------------------+
