@@ -125,8 +125,7 @@ Verify where SDC installed nodes are connected in PowerFlex Manager.
 - EDPM nodes appear as connected.
 
 
-**NOTICE**: PowerFlex Connector Secret file is only required for legacy driver's volume attach and detach operations. Now connector configuration for Dell PowerFlex driver is deprecated.
-
+**NOTICE**: PowerFlex Connector Secret file is only required for legacy driver's volume attach and detach operations. Usage of the connector configuration file is now deprecated and no longer required.
 ### Test the configured Backend
 Finally, create a PowerFlex volume type and test if you can successfully create and attach volumes of that type.
 
