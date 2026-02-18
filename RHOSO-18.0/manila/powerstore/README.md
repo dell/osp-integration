@@ -10,7 +10,7 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 
 ## Prerequisites
 
-- A working Red Hat OpenStack Services on OpenShift 18.0.14 environment.
+- A working Red Hat OpenStack Services on OpenShift environment with a version 18.0.14 or greater.
 - Dell PowerStore (4.2) storage cluster.
 
 ## Steps
@@ -63,14 +63,12 @@ Edit your OpenStackControlPlane CR file.
         powerstore:
           customServiceConfig: |
             [DEFAULT]
-            debug = true
             enabled_share_backends = powerstore
             enabled_share_protocols = NFS,CIFS
             [powerstore]
             driver_handles_share_servers = False
             emc_share_backend = powerstore
             share_backend_name = powerstore
-            enabled_share_protocols = NFS,CIFS
             share_driver = manila.share.drivers.dell_emc.driver.EMCShareDriver
             dell_nas_server = <NAS_SERVER_NAME>
           customServiceConfigSecrets:
@@ -113,7 +111,7 @@ sh-5.1$ openstack share service list
 Finally, create a PowerStore share type and test if you can successfully create and attach shares of that type.
 Create a share type name powerstore.
 ```
-openstack share type create --driver-handles-share-servers false powerstore
+openstack share type create powerstore false
 ```
 Map it to backend name that you previously defined.
 ```
