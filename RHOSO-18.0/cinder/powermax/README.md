@@ -4,26 +4,27 @@
 
 These instructions provide detailed steps on how to enable the Dell PowerMax backend with RHOSO 18.0.
 
-**NOTICE**: This README represents only the **basic** necessary steps to enable Cinder to use a Dell PowerMax array as a backend. It does not contain steps of other components in the system applicable to your particular installation.
+**Note**: This document describes only the minimum steps required to enable Cinder with a Dell PowerMax backend. It does not include configuration steps for other OpenStack or OpenShift components that may be required in your specific environment.
 
 For more information please refer to [Product Documentation for Red Hat OpenStack Services on OpenShift 18.0](https://docs.redhat.com/en/documentation/red_hat_openstack_services_on_openshift/18.0/).
 
 ## Prerequisites
 
-- A working Red Hat OpenStack Services on OpenShift 18.0 environment.
-- Dell PowerMax running a supported PowerMaxOS version.
+* A functional Red Hat OpenStack Services on OpenShift 18.0 environment.
+* A Dell PowerMax array running a supported PowerMaxOS version.
+* Network connectivity between the OpenStack control plane and the PowerMax array.
 
 ## Steps
 
 ### Configure Dell PowerMax storage details
-This section is broken down into two sub-sections. First of all, we'll cover how to configure a PowerMax FC based backend while we'll talk about PowerMax iSCSI based backend in the latter.
+This section first describes how to configure a PowerMax Fibre Channel (FC) backend. iSCSI configuration will be covered later.
 Finally, we'll discover how to configure a multi-backend using both PowerMax FC and iSCSI with an example.
 
 For detailed instructions and supported configuration options, please refer to [Dell PowerMax Backend Configuration](https://docs.openstack.org/cinder/latest/configuration/block-storage/drivers/dell-emc-powermax-driver.html).
 
 #### PowerMax FC based backend configuration
 
-**NOTICE: To isolate FC and iSCSI credentials, it is recommended to use one secret per backend type. This prevents unnecessary reconfiguration or restarts of unrelated cinder-volume services when a secret is updated.**
+**Important**: To isolate credentials between backend types, Red Hat recommends creating one secret per backend. This prevents unnecessary reconfiguration or restarts of unrelated cinder-volume services when a secret is updated.
  
 In this section, we'll create one secret per backend type but depending on your configuration, you might have to create only one of them.
 
@@ -95,10 +96,9 @@ san_password = <DellPowerMaxAdminPasswd>
 ```
 
 ### Configure Cinder to consume the Dell PowerMax backend
-In this section, PowerMax configuration is added to the OpenStack control plane CR. 
+This section describes how to add the PowerMax backend configuration to the OpenStack control plane custom resource (CR).
 
-**NOTICE: As already discussed, you may have to adapt this section depending on your environment, especially if you use FC and iSCSI or only one backend type. In multi-backend configurations, each backend must use a unique
-volume_backend_name.**
+**NOTICE: As already discussed, you may have to adapt this section depending on your environment, especially if you use FC and iSCSI or only one backend type. In multi-backend configurations, each backend must use a unique volume_backend_name.**
 
 * Edit the control plane CR file (_openstack_control_plane.yaml_) and add the Dell PowerMax configuration under **spec.cinder.cinderVolumes** section.
 
@@ -148,7 +148,7 @@ volume_backend_name.**
             powermax_service_level = <DellPowerMax_ServiceLevel>
             image_volume_cache_enabled = True
           customServiceConfigSecrets:
-          - cinder-volume-PowerMax-iscsi-secrets
+          - cinder-volume-powermax-iscsi-secrets
           networkAttachments:
           - storage
           - storageMgmt
@@ -220,7 +220,7 @@ This section provides an example of configuring two PowerMax backends, using FC 
 ### Test the configured Backend
 
 #### Single backend validation
-In this section, we'll validate the cinder configuration by following the steps below:
+In this section, you validate the Cinder configuration by completing the following steps:
 * Make sure the cinder-volume service is up and running.
 * Create a specific volume type which will be used by Cinder.
 * Create a volume on the Dell PowerMax using that volume type.
@@ -239,7 +239,7 @@ sh-5.1$ openstack volume service list
 | cinder-backup    | cinder-backup-0                              | nova | enabled | up    | 2026-03-24T06:12:27.000000 |
 +------------------+----------------------------------------------+------+---------+-------+----------------------------+
 ```
-* Create a volume type named powermax and map it to the Dell PowerStore FC backend.
+* Create a volume type named powermax and map it to the Dell PowerMax FC backend.
 ```
 sh-5.1$ openstack volume type create --property volume_backend_name=powermax_fc powermax
 ```
@@ -260,8 +260,8 @@ sh-5.1$ openstack volume type show powermax
 +--------------------+--------------------------------------+
 ```
 
-* Create a volume using the type created above without error to ensure the availability of the backend.
-sh-5.1$ openstack volume create --type powerstore --size 1 vol
+* Create a volume using the type created above without error to verify the availability of the backend.
+
 ```
 sh-5.1$ openstack volume create --type powermax --size 1 vol
 +---------------------+--------------------------------------+
@@ -308,7 +308,7 @@ To conclude our multi-backend configuration example, we'll execute the same step
 oc rsh openstackclient
 ```
 
-* Confirm the cinder-volume service for all Dell PowerMax backend are up and running
+* Confirm the cinder-volume service for all Dell PowerMax backends are up and running
 ```
 sh-5.1$ openstack volume service list
 +------------------+----------------------------------------------+------+---------+-------+----------------------------+
