@@ -291,14 +291,14 @@ sh-5.1$ openstack volume create --type powermax --size 1 vol
 ```
 Confirm the volume was created successfully.
 
+```
 sh-5.1$ openstack volume list
 +--------------------------------------+-----------+-----------+------+-------------+
 | ID                                   | Name      | Status    | Size | Attached to |
 +--------------------------------------+-----------+-----------+------+-------------+
 | 4bb87397-6eff-406b-8e60-cd003366b0b1 | vol       | available |    1 |             |
 +--------------------------------------+-----------+-----------+------+-------------+
-sh-5.1$
-
+```
 
 #### Multi-backend validation
 To conclude our multi-backend configuration example, we'll execute the same steps against two separate PowerMax backend (_powermax_fc_ and _powermax_iscsi_).
