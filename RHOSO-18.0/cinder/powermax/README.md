@@ -24,7 +24,7 @@ For detailed instructions and supported configuration options, please refer to [
 
 #### PowerMax FC based backend configuration
 
-**Important**: To isolate credentials between backend types, Red Hat recommends creating one secret per backend. This prevents unnecessary reconfiguration or restarts of unrelated cinder-volume services when a secret is updated.
+**Note**: To isolate credentials between backend types, Red Hat recommends creating one secret per backend. This prevents unnecessary reconfiguration or restarts of unrelated cinder-volume services when a secret is updated.
  
 In this section, we'll create one secret per backend type but depending on your configuration, you might have to create only one of them.
 
@@ -98,9 +98,9 @@ san_password = <DellPowerMaxAdminPasswd>
 ### Configure Cinder to consume the Dell PowerMax backend
 This section describes how to add the PowerMax backend configuration to the OpenStack control plane custom resource (CR).
 
-**NOTICE: As already discussed, you may have to adapt this section depending on your environment, especially if you use FC and iSCSI or only one backend type. In multi-backend configurations, each backend must use a unique volume_backend_name.**
+**Note**: As already discussed, you may have to adapt this section depending on your environment, especially if you use FC and iSCSI or only one backend type. In multi-backend configurations, each backend must use a unique volume_backend_name.
 
-* Edit the control plane CR file (_openstack_control_plane.yaml_) and add the Dell PowerMax configuration under **spec.cinder.cinderVolumes** section.
+* Edit the control plane CR file (openstack_control_plane.yaml) and add the Dell PowerMax configuration under **spec.cinder.cinderVolumes** section.
 
 > PowerMax FC based backend configuration
 ```yaml
@@ -165,9 +165,9 @@ oc apply -f openstack_control_plane.yaml
 ### Configure multi-backend 
 This section provides an example of configuring two PowerMax backends, using FC and iSCSI. It assumes that you have created one secret per backend type.
 
-**NOTICE: You can add other backends as well but this documentation won't cover it.**
+**Note**: You can add other backends as well but this documentation won't cover it.
 
-* Edit the control plane CR file (_openstack_control_plane.yaml_) and add the Dell PowerMax configuration under **spec.cinder.cinderVolumes** section.
+* Edit the control plane CR file (openstack_control_plane.yaml) and add the Dell PowerMax configuration under **spec.cinder.cinderVolumes** section.
 
 ```yaml
 ...
@@ -301,7 +301,7 @@ sh-5.1$ openstack volume list
 ```
 
 #### Multi-backend validation
-To conclude our multi-backend configuration example, we'll execute the same steps against two separate PowerMax backend (_powermax_fc_ and _powermax_iscsi_).
+To conclude our multi-backend configuration example, we'll execute the same steps against two separate PowerMax backend (powermax_fc and powermax_iscsi).
 
 * Open a session on the **openstackclient** pod.
 ```
