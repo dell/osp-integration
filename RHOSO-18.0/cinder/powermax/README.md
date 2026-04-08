@@ -193,7 +193,7 @@ This section provides an example of configuring two PowerMax backends, using FC 
           - storageMgmt
           replicas: 1
           resources: {}
-       powermaxISCSI:
+        powermaxISCSI:
           customServiceConfig: |
             [powermaxISCSI]
             volume_backend_name = powermax_iscsi
