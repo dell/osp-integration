@@ -11,7 +11,7 @@ For more information please refer to [Product Documentation for Red Hat OpenStac
 ## Prerequisites
 
 - A working Red Hat OpenStack Services on OpenShift 18.0 environment.
-- Dell PowerFlex 4.x cluster with at least one Storage Pool available.
+- Dell PowerFlex 5.x/4.x cluster with at least one Storage Pool available.
 - PowerFlex Storage Data Client (SDC) for RHEL9.4.
 
 ## Steps
